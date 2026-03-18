@@ -1,40 +1,355 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COllAGEN UP — Klinik Protokoller</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      background: #f5f7fa;
-      color: #2c3e50;
-    }
-    h1 { margin-bottom: 2rem; font-size: 1.6rem; }
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 1.5rem 2.5rem;
-      margin: 0.75rem;
-      text-decoration: none;
-      color: #2c3e50;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: box-shadow 0.2s;
-    }
-    .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COllAGEN UP — Klinik Protokoller</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0a1628;--deep:#0f1e38;--navy:#152d50;--blue:#1b5e9e;
+  --azure:#2479c7;--sky:#4fa3e0;--frost:#c6dcf2;--white:#ffffff;
+  --gold:#d4a843;--gold-light:#f0cc70;--amber:#e8924a;
+  --muted:#6e9fc2;--green:#3ab87a;--red:#e05858;
+  --ff-head:'Cormorant Garamond',serif;--ff-body:'Nunito Sans',sans-serif;
+}
+
+html,body{
+  width:100%;min-height:100%;
+  background:var(--ink);
+  font-family:var(--ff-body);
+  color:var(--white);
+  overflow-x:hidden;
+}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;height:54px;
+  background:rgba(10,22,40,.93);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(212,168,67,.15);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;z-index:100;
+}
+.nav-brand{
+  font-family:var(--ff-head);font-size:1.1rem;letter-spacing:.06em;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-tag{
+  font-size:.72rem;color:var(--muted);
+  border:1px solid rgba(79,163,224,.2);
+  border-radius:16px;padding:3px 12px;
+}
+
+/* ── BACKGROUND ── */
+.bg-mesh{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 55% at 90% 15%, rgba(27,94,158,.16), transparent),
+    radial-gradient(ellipse 55% 65% at 5%  85%, rgba(212,168,67,.07), transparent),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(15,30,56,.4), transparent);
+}
+.bg-lines{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(79,163,224,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,163,224,.035) 1px, transparent 1px);
+  background-size:50px 50px;
+}
+
+/* ── MAIN CONTENT ── */
+.page{
+  position:relative;z-index:2;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:90px 24px 60px;
+}
+
+/* ── HEADER BLOCK ── */
+.header{
+  text-align:center;
+  margin-bottom:52px;
+  position:relative;
+}
+.header::after{
+  content:'';
+  display:block;
+  width:120px;height:2px;
+  background:linear-gradient(90deg, transparent, var(--gold), var(--gold-light), transparent);
+  margin:28px auto 0;
+}
+.header-eyebrow{
+  font-size:.68rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.header-eyebrow span{
+  display:inline-block;
+  width:32px;height:1px;
+  background:rgba(212,168,67,.4);
+}
+.header-logo{
+  font-family:var(--ff-head);
+  font-size:clamp(2.8rem,7vw,5.2rem);
+  line-height:1.05;
+  letter-spacing:.02em;
+  color:var(--white);
+}
+.header-logo .up{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.header-desc{
+  margin-top:18px;
+  font-size:.92rem;color:var(--muted);
+  line-height:1.65;max-width:560px;
+  margin-left:auto;margin-right:auto;
+}
+
+/* ── CARD GRID ── */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:22px;
+  width:100%;max-width:860px;
+}
+
+.protocol-card{
+  position:relative;
+  text-decoration:none;
+  color:inherit;
+  background:rgba(21,45,80,.5);
+  border:1px solid rgba(79,163,224,.15);
+  border-radius:16px;
+  padding:30px 28px 26px;
+  overflow:hidden;
+  display:flex;flex-direction:column;gap:14px;
+  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.protocol-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 16px 48px rgba(0,0,0,.35);
+}
+.protocol-card.gold{border-color:rgba(212,168,67,.25);}
+.protocol-card.gold:hover{border-color:rgba(212,168,67,.5);box-shadow:0 16px 48px rgba(212,168,67,.12);}
+.protocol-card.hair{border-color:rgba(79,163,224,.22);}
+.protocol-card.hair:hover{border-color:rgba(79,163,224,.5);box-shadow:0 16px 48px rgba(79,163,224,.12);}
+
+/* card accent bar */
+.protocol-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:16px 16px 0 0;
+}
+.protocol-card.gold::before{
+  background:linear-gradient(90deg, var(--gold), var(--gold-light), var(--amber));
+}
+.protocol-card.hair::before{
+  background:linear-gradient(90deg, var(--azure), var(--sky), var(--frost));
+}
+
+/* corner glow */
+.protocol-card::after{
+  content:'';
+  position:absolute;
+  width:180px;height:180px;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:.06;
+  transition:opacity .3s;
+}
+.protocol-card.gold::after{
+  background:var(--gold);
+  top:-60px;right:-60px;
+}
+.protocol-card.hair::after{
+  background:var(--sky);
+  top:-60px;right:-60px;
+}
+.protocol-card:hover::after{opacity:.12;}
+
+/* card internals */
+.card-tag{
+  font-size:.63rem;font-weight:800;
+  letter-spacing:.16em;text-transform:uppercase;
+}
+.gold .card-tag{color:var(--gold);}
+.hair .card-tag{color:var(--sky);}
+
+.card-name{
+  font-family:var(--ff-head);
+  font-size:clamp(1.5rem,3vw,2rem);
+  line-height:1.1;color:var(--white);
+}
+.gold .card-name .accent{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hair .card-name .accent{
+  background:linear-gradient(135deg,var(--sky),var(--frost));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+.card-desc{
+  font-size:.82rem;color:var(--muted);
+  line-height:1.6;
+  flex:1;
+}
+
+.badge-row{
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.badge{
+  padding:3px 11px;border-radius:14px;
+  font-size:.68rem;font-weight:700;
+}
+.gold .badge{
+  background:rgba(212,168,67,.1);
+  border:1px solid rgba(212,168,67,.25);
+  color:var(--gold-light);
+}
+.hair .badge{
+  background:rgba(79,163,224,.1);
+  border:1px solid rgba(79,163,224,.25);
+  color:var(--sky);
+}
+
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:14px;
+  border-top:1px solid rgba(79,163,224,.1);
+  font-size:.76rem;
+}
+.gold .card-footer{border-color:rgba(212,168,67,.12);}
+.hair .card-footer{border-color:rgba(79,163,224,.12);}
+
+.card-footer .stat{color:var(--muted);}
+.card-footer .stat strong{color:var(--white);}
+
+.card-cta{
+  display:flex;align-items:center;gap:6px;
+  font-weight:700;font-size:.76rem;
+  transition:gap .2s;
+}
+.gold .card-cta{color:var(--gold);}
+.hair .card-cta{color:var(--sky);}
+.protocol-card:hover .card-cta{gap:10px;}
+
+/* ── FOOTER ── */
+.page-footer{
+  margin-top:52px;
+  text-align:center;
+  font-size:.68rem;color:rgba(110,159,194,.5);
+  letter-spacing:.06em;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.header{animation:fadeUp .6s ease both;}
+.card-grid{animation:fadeUp .6s .15s ease both;}
+.page-footer{animation:fadeUp .6s .3s ease both;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .card-grid{grid-template-columns:1fr;}
+  #nav{padding:0 20px;}
+  .header-logo{font-size:2.4rem;}
+}
+</style>
 </head>
 <body>
-  <h1>COllAGEN UP — Klinik Protokoller</h1>
-  <a class="card" href="COllAGEN_UP_Gold_Protokol_v2.html">🟡 COllAGEN UP Gold Protokolü</a>
-  <a class="card" href="COllAGEN_UP_Hair_Protokol_v2.html">💇 COllAGEN UP Hair Protokolü</a>
+
+<div class="bg-mesh"></div>
+<div class="bg-lines"></div>
+
+<nav id="nav">
+  <span class="nav-brand">COllAGEN UP</span>
+  <span class="nav-tag">Klinik Araştırma Protokolleri · 2026</span>
+</nav>
+
+<main class="page">
+
+  <header class="header">
+    <div class="header-eyebrow">
+      <span></span>
+      Gizli / Confidential
+      <span></span>
+    </div>
+    <h1 class="header-logo">
+      COll<span class="up">AGEN</span> UP
+    </h1>
+    <p class="header-desc">
+      Faz III klinik çalışma protokolleri — cilt yaşlanması ve saç sağlığı alanında
+      oral kolajen peptit formülasyonlarının etkinlik ve güvenlik araştırmaları.
+    </p>
+  </header>
+
+  <div class="card-grid">
+
+    <!-- GOLD -->
+    <a class="protocol-card gold" href="COllAGEN_UP_Gold_Protokol_v2.html">
+      <div class="card-tag">Protokol I</div>
+      <div class="card-name">
+        COllAGEN UP <span class="accent">Gold</span>
+      </div>
+      <p class="card-desc">
+        Düşük molekül ağırlıklı (2 kDa) 5g oral sığır kolajen peptitlerinin
+        cilt yaşlanması üzerindeki etkinliğinin 10g standart kolajenle
+        karşılaştırmalı non-inferiority değerlendirmesi.
+      </p>
+      <div class="badge-row">
+        <span class="badge">Faz III</span>
+        <span class="badge">Non-Inferiority</span>
+        <span class="badge">N = 150</span>
+        <span class="badge">16 Hafta</span>
+      </div>
+      <div class="card-footer">
+        <div class="stat">
+          <strong>3 Kol</strong> · Üçlü Kör · Randomize
+        </div>
+        <span class="card-cta">Protokolü Aç →</span>
+      </div>
+    </a>
+
+    <!-- HAIR -->
+    <a class="protocol-card hair" href="COllAGEN_UP_Hair_Protokol_v2.html">
+      <div class="card-tag">Protokol II</div>
+      <div class="card-name">
+        COllAGEN UP <span class="accent">Hair</span>
+      </div>
+      <p class="card-desc">
+        Kolajen, keratin, hyaluronik asit ve bitkisel kompleks içeren formülasyonun
+        androgenetik alopesi ve telogen effluviumda saç yoğunluğu
+        ve çapı üzerindeki etkisinin değerlendirilmesi.
+      </p>
+      <div class="badge-row">
+        <span class="badge">Faz III</span>
+        <span class="badge">Çift Kör</span>
+        <span class="badge">N = 120</span>
+        <span class="badge">12 Hafta</span>
+      </div>
+      <div class="card-footer">
+        <div class="stat">
+          <strong>3 Kol</strong> · Plasebo Kontrollü · Randomize
+        </div>
+        <span class="card-cta">Protokolü Aç →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer class="page-footer">
+    COllAGEN UP Klinik Araştırma Protokolleri v2 · 2026 · Gizli / Confidential
+  </footer>
+
+</main>
+
 </body>
 </html>
