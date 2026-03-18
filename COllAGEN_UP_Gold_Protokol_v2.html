@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COllAGEN UP Gold – Klinik Protokol v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--ink:#0a1628;--deep:#0f1e38;--navy:#152d50;--blue:#1b5e9e;--azure:#2479c7;--sky:#4fa3e0;--frost:#c6dcf2;--white:#ffffff;--gold:#d4a843;--gold-light:#f0cc70;--amber:#e8924a;--muted:#6e9fc2;--green:#3ab87a;--red:#e05858;--ff-head:'Cormorant Garamond',serif;--ff-body:'Nunito Sans',sans-serif;}
+html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-family:var(--ff-body);color:var(--white);}
+#nav{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(10,22,40,.93);backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,168,67,.15);display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:100;}
+.nav-brand{font-family:var(--ff-head);font-size:1.1rem;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.06em;}
+.nav-counter{font-size:.78rem;color:var(--muted);}
+.nav-btns{display:flex;gap:10px;}
+.nav-btn{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:var(--gold-light);padding:5px 18px;border-radius:20px;cursor:pointer;font-family:var(--ff-body);font-size:.78rem;transition:all .2s;}
+.nav-btn:hover{background:rgba(212,168,67,.25);color:#fff;}
+#progress-bar{position:fixed;top:54px;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--amber));transition:width .4s ease;z-index:99;}
+#deck{position:fixed;inset:0;top:54px;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .5s ease,transform .5s ease;overflow:hidden;}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:all;}
+.slide.prev{opacity:0;transform:translateY(-20px);}
+.bg-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 80% 20%,rgba(27,94,158,.14),transparent),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(212,168,67,.07),transparent);}
+.bg-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(79,163,224,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,163,224,.04) 1px,transparent 1px);background-size:50px 50px;}
+.slide-inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:30px 48px 18px;overflow-y:auto;}
+.slide-inner::-webkit-scrollbar{width:4px;}
+.slide-inner::-webkit-scrollbar-thumb{background:rgba(212,168,67,.25);border-radius:2px;}
+.slide-tag{font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.slide-title{font-family:var(--ff-head);font-size:clamp(1.6rem,3vw,2.6rem);color:var(--white);line-height:1.15;margin-bottom:5px;}
+.slide-sub{font-size:.92rem;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+.sec-head{font-family:var(--ff-head);font-size:1.1rem;color:var(--gold-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(212,168,67,.18);}
+.divider{height:1px;background:linear-gradient(90deg,rgba(212,168,67,.2),transparent);margin:18px 0;}
+.cover-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:36px 56px;position:relative;}
+.cover-logo{font-family:var(--ff-head);font-size:clamp(2.6rem,6.5vw,5rem);line-height:1;margin-bottom:14px;color:var(--white);}
+.cover-logo .up{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cover-logo .gold-word{background:linear-gradient(135deg,var(--gold-light),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cover-tagline{font-size:.82rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.cover-full-title{font-size:clamp(.84rem,1.4vw,1rem);color:var(--frost);max-width:860px;line-height:1.7;margin-bottom:28px;border-left:3px solid var(--gold);padding-left:18px;}
+.badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px;}
+.badge{padding:5px 16px;border-radius:20px;font-size:.76rem;font-weight:700;letter-spacing:.04em;}
+.badge-phase{background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.4);color:var(--gold-light);}
+.badge-design{background:rgba(36,121,199,.15);border:1px solid rgba(36,121,199,.4);color:var(--sky);}
+.badge-n{background:rgba(58,184,122,.12);border:1px solid rgba(58,184,122,.3);color:var(--green);}
+.badge-nonin{background:rgba(232,146,74,.12);border:1px solid rgba(232,146,74,.35);color:var(--amber);}
+.cover-meta{display:flex;gap:28px;flex-wrap:wrap;}
+.cover-meta-item label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:3px;}
+.cover-meta-item span{font-size:.92rem;color:var(--white);}
+.gold-bar{position:absolute;right:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--gold),var(--amber),transparent);border-radius:0 0 0 3px;}
+.card{background:rgba(21,45,80,.5);border:1px solid rgba(79,163,224,.12);border-radius:12px;padding:18px 20px;}
+.card-grid{display:grid;gap:14px;}
+.card-grid.col2{grid-template-columns:1fr 1fr;}
+.mflow{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.mflow:last-child{margin-bottom:0;}
+.mflow-num{min-width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--ink);flex-shrink:0;margin-top:2px;}
+.mflow-text{font-size:.87rem;color:var(--frost);line-height:1.55;}
+.mflow-text strong{color:var(--gold-light);}
+.pill{display:inline-flex;align-items:center;gap:5px;background:rgba(36,121,199,.1);border:1px solid rgba(36,121,199,.2);border-radius:16px;padding:4px 11px;font-size:.75rem;color:var(--frost);margin:3px;}
+.pill .d{width:5px;height:5px;border-radius:50%;background:var(--gold);}
+.obj-label{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+.obj-label.primer{background:rgba(212,168,67,.15);color:var(--gold);}
+.obj-label.sekonder{background:rgba(79,163,224,.15);color:var(--sky);}
+.obj-item{display:flex;align-items:flex-start;gap:11px;padding:10px 14px;border-radius:8px;margin-bottom:7px;background:rgba(21,45,80,.4);border:1px solid rgba(79,163,224,.1);font-size:.87rem;color:var(--frost);line-height:1.5;}
+.ep-card{border-radius:12px;padding:18px 20px;margin-bottom:12px;border-left:4px solid;}
+.ep-card.primer{background:rgba(212,168,67,.07);border-color:var(--gold);}
+.ep-card.sekonder{background:rgba(36,121,199,.07);border-color:var(--azure);}
+.ep-card h4{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.ep-card.primer h4{color:var(--gold);}
+.ep-card.sekonder h4{color:var(--sky);}
+.ep-card p{font-size:.87rem;color:var(--frost);line-height:1.55;}
+.timepoints{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+.tp{padding:3px 10px;border-radius:12px;font-size:.7rem;font-weight:600;background:rgba(36,121,199,.12);border:1px solid rgba(36,121,199,.28);color:var(--sky);}
+.tp.gold{background:rgba(212,168,67,.12);border-color:rgba(212,168,67,.35);color:var(--gold);}
+.tp.green{background:rgba(58,184,122,.1);border-color:rgba(58,184,122,.28);color:var(--green);}
+.tl-wrap{padding:8px 0 16px;}
+.tl-track{display:flex;align-items:stretch;position:relative;margin-bottom:22px;}
+.tl-track::before{content:'';position:absolute;top:28px;left:5%;right:5%;height:2px;background:linear-gradient(90deg,var(--gold),var(--sky),var(--green));z-index:0;}
+.tl-node{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:3px solid var(--ink);margin-bottom:8px;}
+.tl-dot.blue{background:var(--azure);}
+.tl-dot.gold{background:var(--gold);}
+.tl-dot.green{background:var(--green);}
+.tl-dot.amber{background:var(--amber);}
+.tl-dot.frost{background:var(--frost);}
+.tl-lbl{font-size:.68rem;color:var(--muted);text-align:center;margin-bottom:3px;}
+.tl-val{font-size:.82rem;font-weight:700;color:var(--white);text-align:center;}
+.tl-note{font-size:.62rem;color:var(--gold);text-align:center;margin-top:2px;}
+.arms-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.arm-box{border-radius:10px;padding:14px 16px;border:1px solid;}
+.arm-box.test{background:rgba(212,168,67,.07);border-color:rgba(212,168,67,.25);}
+.arm-box.ctrl{background:rgba(36,121,199,.08);border-color:rgba(36,121,199,.28);}
+.arm-box.plc{background:rgba(21,45,80,.5);border-color:rgba(79,163,224,.15);}
+.arm-tag{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.arm-box.test .arm-tag{color:var(--gold);}
+.arm-box.ctrl .arm-tag{color:var(--sky);}
+.arm-box.plc .arm-tag{color:var(--muted);}
+.arm-name{font-size:.87rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.arm-dose{font-size:.76rem;color:var(--frost);}
+.arm-n{display:inline-block;margin-top:7px;padding:2px 10px;border-radius:12px;font-size:.7rem;font-weight:700;background:rgba(79,163,224,.1);color:var(--sky);}
+.design-badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.dbadge{padding:4px 13px;border-radius:20px;font-size:.76rem;background:rgba(21,45,80,.6);border:1px solid rgba(79,163,224,.2);color:var(--frost);}
+.dbadge strong{color:var(--gold-light);}
+.pop-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.pop-col{border-radius:12px;padding:18px 20px;}
+.pop-col.inc{background:rgba(58,184,122,.05);border:1px solid rgba(58,184,122,.22);}
+.pop-col.exc{background:rgba(224,88,88,.05);border:1px solid rgba(224,88,88,.18);}
+.pop-col-head{display:flex;align-items:center;gap:7px;font-size:.76rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:14px;}
+.pop-col.inc .pop-col-head{color:var(--green);}
+.pop-col.exc .pop-col-head{color:var(--red);}
+.pop-item{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;font-size:.83rem;color:var(--frost);line-height:1.5;}
+.pop-bul{min-width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0;margin-top:2px;}
+.inc .pop-bul{background:rgba(58,184,122,.18);color:var(--green);}
+.exc .pop-bul{background:rgba(224,88,88,.18);color:var(--red);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.stat-card{background:rgba(21,45,80,.5);border:1px solid rgba(79,163,224,.13);border-radius:12px;padding:16px 18px;}
+.stat-card h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-light);margin-bottom:10px;}
+.si{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid rgba(79,163,224,.07);font-size:.85rem;}
+.si:last-child{border-bottom:none;}
+.si .k{color:var(--muted);}
+.si .v{color:var(--white);font-weight:600;}
+.pw-bar{height:8px;border-radius:4px;background:rgba(36,121,199,.15);overflow:hidden;margin:10px 0 4px;}
+.pw-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+.safety-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.safety-card{background:rgba(21,45,80,.5);border:1px solid rgba(79,163,224,.12);border-radius:12px;padding:14px 16px;}
+.safety-card h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sky);margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.si2{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid rgba(79,163,224,.06);font-size:.81rem;color:var(--frost);line-height:1.45;}
+.si2:last-child{border-bottom:none;}
+.sd{min-width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px;}
+.slide-footer{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:9px 48px;border-top:1px solid rgba(212,168,67,.1);font-size:.68rem;color:var(--muted);flex-shrink:0;}
+.ref-note{margin-top:14px;background:rgba(36,121,199,.06);border:1px solid rgba(79,163,224,.15);border-radius:8px;padding:10px 14px;font-size:.72rem;color:var(--muted);line-height:1.5;}
+.ref-note strong{color:var(--gold-light);}
+.info-box{margin-top:14px;border-radius:10px;padding:13px 17px;display:flex;gap:12px;align-items:flex-start;font-size:.83rem;line-height:1.55;}
+@media(max-width:768px){.slide-inner{padding:18px 18px 14px;}.slide-footer{padding:7px 18px;}.card-grid.col2,.pop-grid,.stats-grid,.safety-grid,.arms-row{grid-template-columns:1fr;}.cover-wrap{padding:20px 22px;}.cover-logo{font-size:2.2rem;}}
+</style>
+</head>
+<body>
+<div id="nav"><span class="nav-brand">COllAGEN UP Gold</span><span class="nav-counter"><span id="cur">1</span> / <span id="tot">8</span></span><div class="nav-btns"><button class="nav-btn" id="btn-prev">← Geri</button><button class="nav-btn" id="btn-next">İleri →</button></div></div>
+<div id="progress-bar"></div>
+<div id="deck">
+
+<!-- SLIDE 1: COVER -->
+<div class="slide active" id="s1">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="cover-wrap">
+    <div class="gold-bar"></div>
+    <div class="cover-tagline">Non-Inferiority Faz III Klinik Çalışma</div>
+    <div class="cover-logo">COll<span class="up">AGEN</span><br><span class="gold-word">UP Gold</span></div>
+    <div class="cover-full-title">Düşük Molekül Ağırlıklı (2 kDa) 5g Oral Sığır Kolajen Peptitlerinin (COllAGEN UP Gold) Cilt Yaşlanma Parametreleri Üzerindeki Etkinliğinin 10g Standart Kolajen ile Karşılaştırmalı (Non-Inferiority) Histolojik ve Görsel Değerlendirmesi</div>
+    <div class="badge-row">
+      <span class="badge badge-phase">Faz III Klinik Çalışma</span>
+      <span class="badge badge-nonin">Non-Inferiority Tasarımı</span>
+      <span class="badge badge-design">Üçlü Kör · Randomize · 3 Kol</span>
+      <span class="badge badge-n">N = 150 Gönüllü</span>
+    </div>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>Tasarım</label><span>Randomize, Aktif + Plasebo Kontrollü</span></div>
+      <div class="cover-meta-item"><label>Süre</label><span>16 Hafta (12 Hf Müdahale + 4 Hf Takip)</span></div>
+      <div class="cover-meta-item"><label>Formülasyon</label><span>2 kDa · %25 Sığır Kolajeni (Tip 1&3)</span></div>
+      <div class="cover-meta-item"><label>Kayıt</label><span>DRKS / ICTRP</span></div>
+      <div class="cover-meta-item"><label>Yıl</label><span>2026</span></div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Klinik Araştırma Protokolü v2 (Laing 2020 / Bolke 2019 uyumlu)</span><span>Gizli / Confidential</span></div>
+</div>
+
+<!-- SLIDE 2: ARKA PLAN -->
+<div class="slide" id="s2">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 02</div>
+    <div class="slide-title">Arka Plan ve Rasyonel</div>
+    <div class="slide-sub">Cilt yaşlanması hastalık yükü, formülasyon ve biyoyararlanım avantajı</div>
+    <div class="card-grid col2" style="margin-bottom:18px;">
+      <div class="card">
+        <div class="sec-head">📉 Hastalık Yükü — Cilt Yaşlanması</div>
+        <div class="mflow"><div class="mflow-num">1</div><div class="mflow-text">30 yaş sonrasında dermal kolajen sentezi yıllık <strong>%1–2 oranında azalır</strong>; 60 yaşında total kolajen içeriğinin ~%30'u yitirilir.</div></div>
+        <div class="mflow"><div class="mflow-num">2</div><div class="mflow-text">Fotohasar ve oksidatif stres <strong>MMP aktivasyonunu</strong> artırarak mevcut kolajen ve elastin liflerini parçalar.</div></div>
+        <div class="mflow"><div class="mflow-num">3</div><div class="mflow-text">Periorbital kırışıklıklar ve nazolabial çizgiler; yaşam kalitesi ve <strong>özgüven üzerinde ölçülebilir negatif etki</strong> yaratmaktadır.</div></div>
+        <div class="mflow"><div class="mflow-num">4</div><div class="mflow-text">Oral kolajen peptit takviyesi, <strong>non-invazif</strong> ve güvenli bir müdahale olarak klinik kanıta ihtiyaç duymaktadır.</div></div>
+      </div>
+      <div class="card">
+        <div class="sec-head">✨ Formülasyon Bileşenleri</div>
+        <div style="margin-bottom:14px;">
+          <div class="pill"><div class="d"></div>%25 Hidrolize Sığır Kolajeni (Tip 1 & 3)</div>
+          <div class="pill"><div class="d"></div>2 kDa Düşük Mol. Ağırlığı</div>
+          <div class="pill"><div class="d"></div>%0,5 Hyaluronik Asit</div>
+          <div class="pill"><div class="d"></div>Koenzim Q10</div>
+          <div class="pill"><div class="d"></div>Kır İğdesi (Sea Buckthorn)</div>
+          <div class="pill"><div class="d"></div>Aserola (C Vitamini kaynağı)</div>
+        </div>
+        <div style="background:rgba(212,168,67,.07);border:1px solid rgba(212,168,67,.2);border-radius:8px;padding:12px;font-size:.78rem;color:var(--frost);line-height:1.6;">🔑 <strong style="color:var(--gold);">Stratejik Hedef:</strong> 5g düşük MW formülünün, 2 kDa yüksek biyoyararlanımı sayesinde piyasadaki <strong>10g standart üründen geri kalmadığını</strong> (Non-Inferiority) kanıtlamak.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head">🔬 Biyoyararlanım Avantajı — 2 kDa Farkı</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="background:rgba(212,168,67,.08);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">⚡</div><div style="font-size:.75rem;color:var(--gold-light);font-weight:700;margin-bottom:3px;">Hızlı Emilim</div><div style="font-size:.68rem;color:var(--muted);">2 kDa peptitler intestinal bariyeri >5 kDa'ya göre çok daha hızlı geçer</div></div>
+        <div style="background:rgba(36,121,199,.08);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">🎯</div><div style="font-size:.75rem;color:var(--sky);font-weight:700;margin-bottom:3px;">Hedef Doku Ulaşımı</div><div style="font-size:.68rem;color:var(--muted);">Daha yüksek serum peptit konsantrasyonu → fibroblast stimülasyonu</div></div>
+        <div style="background:rgba(58,184,122,.07);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">🧪</div><div style="font-size:.75rem;color:var(--green);font-weight:700;margin-bottom:3px;">Antioksidan Sinerji</div><div style="font-size:.68rem;color:var(--muted);">CoQ10, Sea Buckthorn ve Aserola ile ROS nötralizasyonu</div></div>
+        <div style="background:rgba(232,146,74,.07);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">💧</div><div style="font-size:.75rem;color:var(--amber);font-weight:700;margin-bottom:3px;">Hidrasyon Desteği</div><div style="font-size:.68rem;color:var(--muted);">%0,5 Hyaluronik asit ile NMF artışı ve bariyer güçlendirme</div></div>
+      </div>
+    </div>
+    <div class="ref-note"><strong>Referans:</strong> Laing ve ark. (2020) konfokkal mikroskobi ile kollajen yapısında anlamlı iyileşme (p=0.044); Bolke ve ark. (2019) hidrasyon +%28, pürüzlülük -%27, elastikiyet ve yoğunlukta anlamlı fark (tümü p&lt;0.0004), 4 hf takipte etki korunmuştur. Her iki çalışma da benzer formülasyonu test etmiştir.</div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Arka Plan</span><span>Slayt 02 / 08</span></div>
+</div>
+
+<!-- SLIDE 3: AMAÇLAR -->
+<div class="slide" id="s3">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 03</div>
+    <div class="slide-title">Çalışma Amaçları</div>
+    <div class="slide-sub">Primer non-inferiority testi ve sekonder araştırma hedefleri</div>
+    <div style="margin-bottom:20px;">
+      <div class="obj-label primer">🎯 Primer Amaçlar</div>
+      <div class="obj-item"><span style="font-size:1rem;">⚖️</span><div>COllAGEN UP Gold'un (5g, 2kDa) periorbital kırışıklık derinliğini azaltma etkinliğinin, 10g standart kolajene <strong>non-inferiority marjini dahilinde geri kalmadığını</strong> kanıtlamak (δ ≤ %15).</div></div>
+      <div class="obj-item"><span style="font-size:1rem;">📊</span><div>Cutometer (R2) ve Corneometer ile <strong>cilt elastikiyet ve hidrasyon değişimlerini</strong> T0, T4, T12 ve T16'da ölçmek.</div></div>
+      <div class="obj-item"><span style="font-size:1rem;">⏱️</span><div><strong>T4'te erken klinik yanıt</strong> değerlendirmesi ile formülün hız avantajını ortaya koymak.</div></div>
+      <div class="obj-item"><span style="font-size:1rem;">🔁</span><div>12 haftalık müdahale sonrası <strong>4 haftalık takip döneminde (T16)</strong> etkilerin sürdürülebilirliğini değerlendirmek (Bolke 2019 modeli).</div></div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="obj-label sekonder">📊 Sekonder Amaçlar</div>
+      <div class="card-grid col2">
+        <div>
+          <div class="obj-item"><span>🔬</span><div>Punch biyopsi ile Tip 1 ve Tip 3 <strong>prokolajen ekspresyonu</strong> ve elastin lif yapısındaki histolojik değişimi ölçmek.</div></div>
+          <div class="obj-item"><span>🔭</span><div><strong>Konfokkal lazer mikroskobi (VIVASCOPE 1500)</strong> ile yüz kollajen yapısının in vivo değerlendirmesi — kör uzman VAS skorlaması (Laing 2020 modeli).</div></div>
+        </div>
+        <div>
+          <div class="obj-item"><span>🩸</span><div>Serum <strong>MDA (Malondialdehit)</strong> düzeyleri ile CoQ10/Sea Buckthorn/Aserola'nın antioksidan etkinliğini kanıtlamak.</div></div>
+          <div class="obj-item"><span>📋</span><div>Öznel cilt değerlendirme anketi (Laing 2020 modeli: kuruluk, elastikiyet, pürüzlülük, parlaklık) ve GI tolerabilite; <strong>AE profili</strong>.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Amaçlar</span><span>Slayt 03 / 08</span></div>
+</div>
+
+<!-- SLIDE 4: ENDPOINTS -->
+<div class="slide" id="s4">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 04</div>
+    <div class="slide-title">Sonlanım Noktaları</div>
+    <div class="slide-sub">Primer non-inferiority, sekonder ve sürdürülebilirlik kriterleri (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div class="ep-card primer">
+      <h4>🎯 Primer Sonlanım — Non-Inferiority</h4>
+      <p><strong>VISIA® / Antera 3D</strong> ile periorbital kırışıklık derinliği (μm), <strong>Cutometer MPA 580</strong> ile cilt elastikiyeti (R2), <strong>Corneometer CM 825</strong> ile cilt hidrasyon (a.u.). COllAGEN UP Gold'un standart 10g kolajene non-inferiority marjini (δ ≤ %15) dahilinde eşdeğer ya da üstün olduğunun kanıtlanması. <strong>PRIMOS</strong> silikon replika ile cilt pürüzlülüğü (Rz, μm) ölçümü. Tüm ölçümler standardize koşullarda (20°C, %40–60 nem, ≥30 dk aklimatizasyon).</p>
+      <div class="timepoints"><span class="tp gold">T0 — Baseline</span><span class="tp gold">T4 — 4. Hafta</span><span class="tp">T12 — 12. Hafta (Final)</span><span class="tp green">T16 — 16. Hafta (Sürdürülebilirlik)</span></div>
+    </div>
+    <div class="card-grid col2">
+      <div class="ep-card sekonder" style="margin-bottom:0;">
+        <h4>🔭 Sekonder — Konfokkal Mikroskobi (Laing 2020)</h4>
+        <p><strong>VIVASCOPE 1500</strong> ile yüz kollajen yapısının in vivo değerlendirmesi. Kör uzman, görüntüleri VAS (-50 / +50) ile skorlar; <strong>zaman noktasına ve tedaviye kör</strong>. ≥3 stack / katılımcı, 5 μm optik kesitler.</p>
+        <div class="timepoints"><span class="tp">T0</span><span class="tp">T12</span></div>
+      </div>
+      <div class="ep-card sekonder" style="margin-bottom:0;">
+        <h4>🔬 Sekonder — Histoloji (Biyopsi) + Yoğunluk</h4>
+        <p>3 mm punch biyopsi → IHK: <strong>Tip 1 & 3 prokolajen</strong> ve elastin. <strong>SkinScanner DUB®</strong> sonografi ile cilt yoğunluğu (Bolke 2019; uyluk). Kör patolog değerlendirmesi.</p>
+        <div class="timepoints"><span class="tp">T0</span><span class="tp">T12</span></div>
+      </div>
+      <div class="ep-card sekonder" style="margin-bottom:0;">
+        <h4>🩸 Sekonder — Oksidatif Stres (MDA)</h4>
+        <p>Serum <strong>Malondialdehit (MDA)</strong>: CoQ10, Sea Buckthorn ve Aserola antioksidan sinerjisinin nesnel kanıtı.</p>
+        <div class="timepoints"><span class="tp">T0</span><span class="tp">T12</span></div>
+      </div>
+      <div class="ep-card sekonder" style="margin-bottom:0;">
+        <h4>📋 Sekonder — Öznel Değerlendirme & Tolerabilite</h4>
+        <p>Cilt kalitesi anketi (Laing 2020 modeli: kuruluk, pürüzlülük, elastikiyet, parlaklık, yumuşaklık; 5 puan Likert). GI tolerabilite ve uyum oranı. <strong>Uyum izlemi:</strong> 29., 57. ve 85. günlerde.</p>
+        <div class="timepoints"><span class="tp">T4</span><span class="tp">T8</span><span class="tp">T12</span><span class="tp green">T16</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Sonlanım Noktaları</span><span>Slayt 04 / 08</span></div>
+</div>
+
+<!-- SLIDE 5: STUDY DESIGN -->
+<div class="slide" id="s5">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 05</div>
+    <div class="slide-title">Çalışma Tasarımı</div>
+    <div class="slide-sub">Non-inferiority paradigması · Üçlü körleme · Zaman çizelgesi (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div class="design-badges">
+      <span class="dbadge">🎲 <strong>Randomize (Blok)</strong></span>
+      <span class="dbadge">👁️👁️👁️ <strong>Üçlü Kör</strong></span>
+      <span class="dbadge">⚖️ <strong>Non-Inferiority</strong></span>
+      <span class="dbadge">💊 <strong>Plasebo Kontrollü</strong></span>
+      <span class="dbadge">🏅 <strong>Aktif Kontrol (10g)</strong></span>
+      <span class="dbadge">📊 <strong>3 Paralel Kol</strong></span>
+      <span class="dbadge">🔁 <strong>4 Hf Takip (T16)</strong></span>
+    </div>
+    <div class="info-box" style="background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);color:var(--frost);margin-bottom:16px;">
+      <span style="font-size:1.2rem;">👁️</span>
+      <div><strong style="color:var(--gold);">Üçlü Körleme (Laing 2020):</strong> (1) Katılımcı, (2) ürünü uygulayan personel ve (3) sonuçları değerlendiren araştırmacı körlenir. VIVASCOPE/histoloji uzmanı ek olarak <strong>görüntünün alınma zamanına (T0/T12)</strong> kör tutulur. Test ürünü, aktif kontrol ve plasebo özdeş ampullerde (25 mL) sunulur; plasebo besin değeri içermez.</div>
+    </div>
+    <div class="tl-wrap">
+      <div class="sec-head" style="margin-bottom:18px;">⏱️ Çalışma Zaman Çizelgesi</div>
+      <div class="tl-track">
+        <div class="tl-node"><div class="tl-dot blue"></div><div class="tl-lbl">Tarama</div><div class="tl-val">-2. Hf</div><div class="tl-note">Uygunluk & IK</div></div>
+        <div class="tl-node"><div class="tl-dot gold"></div><div class="tl-lbl">Başlangıç</div><div class="tl-val">T0</div><div class="tl-note">Randomizasyon</div></div>
+        <div class="tl-node"><div class="tl-dot amber"></div><div class="tl-lbl">Erken Yanıt</div><div class="tl-val">T4</div><div class="tl-note">⚡ Klinik Yanıt + Uyum</div></div>
+        <div class="tl-node"><div class="tl-dot blue"></div><div class="tl-lbl">Ara İzlem</div><div class="tl-val">T8</div><div class="tl-note">Güvenlik + Uyum</div></div>
+        <div class="tl-node"><div class="tl-dot green"></div><div class="tl-lbl">Final</div><div class="tl-val">T12</div><div class="tl-note">✅ Primer Endpoint</div></div>
+        <div class="tl-node"><div class="tl-dot frost"></div><div class="tl-lbl">Takip</div><div class="tl-val">T16</div><div class="tl-note">🔁 Sürdürülebilirlik</div></div>
+      </div>
+      <div class="arms-row">
+        <div class="arm-box test"><div class="arm-tag">Test Grubu</div><div class="arm-name">COllAGEN UP Gold</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>5g · 2 kDa sığır kolajeni (Tip 1&3)<br>+ CoQ10, Sea Buckthorn, Aserola, HA</div><span class="arm-n">n = 50</span></div>
+        <div class="arm-box ctrl"><div class="arm-tag">Aktif Kontrol</div><div class="arm-name">Standart Kolajen (10g)</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>10g · 5 kDa hidrolize kolajen<br>Piyasa standart formülasyonu</div><span class="arm-n">n = 50</span></div>
+        <div class="arm-box plc"><div class="arm-tag">Plasebo</div><div class="arm-name">Eşleştirilmiş Plasebo</div><div class="arm-dose">25 mL inaktif likit<br>K-sorbat, Na-benzoat, CMC,<br>sitrik asit, doğal aroma, su<br>Besin değeri yok (Laing modeli)</div><span class="arm-n">n = 50</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Çalışma Tasarımı</span><span>Slayt 05 / 08</span></div>
+</div>
+
+<!-- SLIDE 6: POPULATION -->
+<div class="slide" id="s6">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 06</div>
+    <div class="slide-title">Araştırma Popülasyonu</div>
+    <div class="slide-sub">Dahil etme ve dışlama kriterleri · N = 150 (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+      <span class="badge badge-design">35–65 yaş · Erkek & Kadın</span>
+      <span class="badge badge-n">Glogau Tip II–III Kırışıklık</span>
+      <span class="badge badge-phase">Periorbital veya Nazolabial Kırışıklık</span>
+    </div>
+    <div class="pop-grid">
+      <div class="pop-col inc">
+        <div class="pop-col-head">✅ Dahil Etme Kriterleri</div>
+        <div class="pop-item"><div class="pop-bul inc">✓</div><div>35–65 yaş arası sağlıklı erkek ve kadın gönüllüler</div></div>
+        <div class="pop-item"><div class="pop-bul inc">✓</div><div>Dermatolojik muayene ile <strong>Glogau Tip II veya III</strong> kırışıklık profili</div></div>
+        <div class="pop-item"><div class="pop-bul inc">✓</div><div>Periorbital veya nazolabial bölgede <strong>dinlenme halinde belirgin ince kırışıklık</strong> ve cilt matlaşması</div></div>
+        <div class="pop-item"><div class="pop-bul inc">✓</div><div>Mevcut yaşam alışkanlıklarını korumayı ve <strong>östrojen/progesteron tedavisine başlamamayı veya değiştirmemeyi</strong> taahhüt etmek</div></div>
+        <div class="pop-item"><div class="pop-bul inc">✓</div><div>Ölçüm sabahları yüze yalnızca standart nemlendirici + SPF uygulamayı, <strong>dekoratif/aktif kozmetik kullanmamayı</strong> kabul etmek</div></div>
+        <div class="pop-item"><div class="pop-bul inc">✓</div><div>Yazılı bilgilendirilmiş onam formunu imzalamış olmak</div></div>
+      </div>
+      <div class="pop-col exc">
+        <div class="pop-col-head">🚫 Dışlama Kriterleri</div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Son <strong>6 ay</strong> içinde Botoks, dermal dolgu, lazer, peeling veya ip askı</div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Son <strong>3 ay</strong> içinde oral kolajen, yüksek doz antioksidan veya HA takviyesi</div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div><strong>Sistemik ilaç:</strong> immünosupresifler, antiinflamatuvarlar, analjezikler, antihistaminikler, antibiyotikler (Laing 2020)</div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Ölçüm alanında <strong>topikal ilaç</strong> veya son 1 ay içinde yoğun aktif cilt bakım ürünü (Laing 2020)</div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Test bölgesinde aktif <strong>egzama, şiddetli akne, sedef veya rosacea</strong></div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Majör/kronik dahili hastalık, bilinen <strong>kanser</strong> (Bolke 2019)</div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Çalışma süresince <strong>güneşlenme veya solaryum</strong> (Bolke 2019)</div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Gebelik, laktasyon; sığır kolajeni içerdiği için <strong>vegan/kesin vejetaryen</strong></div></div>
+        <div class="pop-item"><div class="pop-bul exc">✕</div><div>Kır iğdesi, Aserola veya tatlandırıcılara intolerans; son 3 ayda <strong>%10+ kilo dalgalanması</strong></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Popülasyon</span><span>Slayt 06 / 08</span></div>
+</div>
+
+<!-- SLIDE 7: STATS -->
+<div class="slide" id="s7">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 07</div>
+    <div class="slide-title">İstatistiksel Analiz</div>
+    <div class="slide-sub">Non-inferiority marjini, örneklem büyüklüğü ve analiz planı (ICH E9 uyumlu · SAS 9.4)</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h4>📐 Örneklem Büyüklüğü</h4>
+        <div class="si"><span class="k">Güç (Power)</span><span class="v">%80</span></div>
+        <div class="si"><span class="k">α (tek yönlü, NI)</span><span class="v">0.025</span></div>
+        <div class="si"><span class="k">NI marjini (δ)</span><span class="v">≤ %15</span></div>
+        <div class="si"><span class="k">Dropout</span><span class="v">%15</span></div>
+        <div class="si"><span class="k">Her kol / Toplam</span><span class="v">n=50 / N=150</span></div>
+        <div class="si"><span class="k">Yazılım</span><span class="v">SAS 9.4 (Windows)</span></div>
+        <div class="pw-bar"><div class="pw-fill" style="width:80%;"></div></div>
+        <div style="font-size:.7rem;color:var(--gold);text-align:right;">%80 İstatistiksel Güç</div>
+      </div>
+      <div class="stat-card">
+        <h4>📊 Primer NI Analizi (Laing / Bolke modeli)</h4>
+        <div class="si"><span class="k">Ana test</span><span class="v">ANCOVA (Baseline kovaryat)</span></div>
+        <div class="si"><span class="k">NI çerçevesi</span><span class="v">90% CI üst sınırı &lt; δ</span></div>
+        <div class="si"><span class="k">Gruplar arası</span><span class="v">Bağımsız örneklem t-testi</span></div>
+        <div class="si"><span class="k">Grup içi (T12 vs T0)</span><span class="v">Eşleştirilmiş t-test</span></div>
+        <div class="si"><span class="k">Analiz seti</span><span class="v">PP (birincil) + ITT</span></div>
+        <div class="si"><span class="k">Kayıp veri</span><span class="v">Multiple Imputation</span></div>
+      </div>
+      <div class="stat-card">
+        <h4>🔁 Tekrarlayan Ölçüm & Düzeltmeler</h4>
+        <div class="si"><span class="k">Model</span><span class="v">RM-ANOVA</span></div>
+        <div class="si"><span class="k">Post-hoc</span><span class="v">Tukey HSD / Dunnett</span></div>
+        <div class="si"><span class="k">Çoklu karşılaştırma</span><span class="v">Bonferroni</span></div>
+        <div class="si"><span class="k">Zaman noktaları</span><span class="v">T0, T4, T12, T16</span></div>
+        <div class="si"><span class="k">Standart</span><span class="v">ICH E9</span></div>
+      </div>
+      <div class="stat-card">
+        <h4>🧪 Destekleyici & Sürdürülebilirlik</h4>
+        <div class="si"><span class="k">Öznel değerlendirme</span><span class="v">Mann-Whitney-Wilcoxon</span></div>
+        <div class="si"><span class="k">Biyopsi (Histoloji)</span><span class="v">Wilcoxon Signed-Rank</span></div>
+        <div class="si"><span class="k">MDA (Oksidatif stres)</span><span class="v">Paired t-test</span></div>
+        <div class="si"><span class="k">GI tolerabilite</span><span class="v">Fisher's Exact</span></div>
+        <div class="si"><span class="k">Sürdürülebilirlik</span><span class="v">T16 vs T0, T16 vs T12</span></div>
+      </div>
+    </div>
+    <div class="ref-note"><strong>Popülasyon Tanımları:</strong> <strong>ITT (Güvenlik)</strong> = en az bir doz alan tüm randomize katılımcılar. <strong>PP</strong> = dahil/dışlama kriterlerine uyan, majör ihlali olmayan, onamını geri çekmemiş katılımcılar. NI analizinde PP seti birincildir (konservatif yaklaşım); ITT seti sensitivite analizi için kullanılır (Laing 2020 / Bolke 2019).</div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – İstatistik</span><span>Slayt 07 / 08</span></div>
+</div>
+
+<!-- SLIDE 8: SAFETY -->
+<div class="slide" id="s8">
+  <div class="bg-mesh"></div><div class="bg-lines"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 08</div>
+    <div class="slide-title">Güvenlik ve Tolerabilite</div>
+    <div class="slide-sub">Dermatolojik muayene, izlem parametreleri ve bağımsız denetim (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <h4>🩺 Dermatolojik Muayene (Bolke 2019)</h4>
+        <div class="si2"><div class="sd"></div><div>Çalışma öncesi, sırasında ve sonrasında standart klinik dermatolojik değerlendirme</div></div>
+        <div class="si2"><div class="sd"></div><div><strong>4 puanlı skala:</strong> 0=patoloji yok, 1=hafif, 2=orta, 3=şiddetli reaksiyon</div></div>
+        <div class="si2"><div class="sd"></div><div>Tolerabilite: Çok iyi / İyi / Kararsız / Kötü / Çok kötü derecelendirmesi</div></div>
+        <div class="si2"><div class="sd"></div><div>Her bulgu T0, T4, T12 ve T16'da belgelenir</div></div>
+      </div>
+      <div class="safety-card">
+        <h4>🩸 Biyokimyasal İzlem</h4>
+        <div class="si2"><div class="sd"></div><div>CBC, KC enzimleri (AST, ALT, GGT), böbrek fonksiyonu: T0, T4, T12</div></div>
+        <div class="si2"><div class="sd"></div><div>Serum MDA: Antioksidan etkinlik kanıtı + güvenlik markörü</div></div>
+        <div class="si2"><div class="sd"></div><div>Lipid profili (sığır kolajeni kaynaklı): T0 ve T12</div></div>
+      </div>
+      <div class="safety-card">
+        <h4>📋 Uyum & Tolerabilite (Laing 2020)</h4>
+        <div class="si2"><div class="sd"></div><div><strong>Uyum kontrolleri:</strong> 29., 57. ve 85. günlerde</div></div>
+        <div class="si2"><div class="sd"></div><div>GI anketi: Şişkinlik, gaz, bulantı, ishal/kabızlık (Likert)</div></div>
+        <div class="si2"><div class="sd"></div><div>AE ve konkomitan tedavi değişiklikleri her uyum vizitesinde belgelenir</div></div>
+        <div class="si2"><div class="sd"></div><div>Öznel ürün anketi T12 ve T16'da doldurulur (Laing modeli)</div></div>
+      </div>
+      <div class="safety-card">
+        <h4>⚠️ AE/SAE & Biyopsi Güvenliği</h4>
+        <div class="si2"><div class="sd"></div><div>Tüm AE'ler CTCAE v5.0'a göre sınıflanır; SAE → 24 saat bildirim</div></div>
+        <div class="si2"><div class="sd"></div><div>Bağımsız DSMB güvenlik verilerini kör olmadan inceler</div></div>
+        <div class="si2"><div class="sd"></div><div>Biyopsi: lokal anestezi, ayrı onam, 2 hf yara takibi, kör patoloji</div></div>
+        <div class="si2"><div class="sd"></div><div>Warfarin kullananlar dışlanır (kır iğdesi etkileşimi)</div></div>
+      </div>
+    </div>
+    <div class="info-box" style="background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);color:var(--frost);">
+      <span style="font-size:1.2rem;">🛡️</span>
+      <div><strong style="color:var(--gold);">Standardize Ölçüm Koşulları:</strong> Tüm ölçümler klimatize odada (21±1°C / 20°C, %40–60 nem), ≥30 dk aklimatizasyon sonrası yapılır (Laing/Bolke). Katılımcılar ölçüm sabahı ölçüm alanına dekoratif kozmetik uygulamamalıdır. Çalışma DRKS/ICTRP'de kayıtlıdır; Helsinki Deklarasyonu ve ulusal mevzuata tam uyum sağlanır. BSE/TSE sertifikalı sığır kolajeni tedarikçisi zorunludur.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Gold – Güvenlik</span><span>Slayt 08 / 08</span></div>
+</div>
+
+</div>
+<script>
+const slides=document.querySelectorAll('.slide');const total=slides.length;let cur=0;document.getElementById('tot').textContent=total;
+function go(n){slides[cur].classList.remove('active');slides[cur].classList.add('prev');setTimeout(()=>slides[cur].classList.remove('prev'),550);cur=(n+total)%total;slides[cur].classList.add('active');document.getElementById('cur').textContent=cur+1;document.getElementById('progress-bar').style.width=((cur+1)/total*100)+'%';}
+document.getElementById('btn-next').addEventListener('click',()=>go(cur+1));document.getElementById('btn-prev').addEventListener('click',()=>go(cur-1));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(cur-1);});
+let tx=0;document.addEventListener('touchstart',e=>tx=e.changedTouches[0].clientX,{passive:true});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){dx<0?go(cur+1):go(cur-1);}},{passive:true});
+document.getElementById('progress-bar').style.width=(1/total*100)+'%';
+</script>
+</body>
+</html>

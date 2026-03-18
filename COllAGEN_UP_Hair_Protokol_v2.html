@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COllAGEN UP Hair – Klinik Protokol v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--ink:#08162e;--navy:#0d2347;--navy2:#153060;--blue:#1a5fa8;--azure:#2980d4;--sky:#5baae8;--frost:#c8dff5;--white:#ffffff;--gold:#e8b84b;--muted:#7fa8d0;--green:#3ec98e;--red:#e85b5b;--ff-head:'Playfair Display',serif;--ff-body:'Source Sans 3',sans-serif;}
+html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-family:var(--ff-body);}
+#nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(8,22,46,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(90,160,230,.18);display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:100;}
+.nav-brand{font-family:var(--ff-head);font-size:1rem;color:var(--gold);letter-spacing:.04em;}
+.nav-counter{font-size:.8rem;color:var(--muted);}
+.nav-btns{display:flex;gap:10px;}
+.nav-btn{background:rgba(41,128,212,.18);border:1px solid rgba(91,170,232,.3);color:var(--sky);padding:5px 16px;border-radius:20px;cursor:pointer;font-family:var(--ff-body);font-size:.8rem;transition:all .2s;}
+.nav-btn:hover{background:rgba(41,128,212,.4);color:#fff;}
+#progress-bar{position:fixed;top:52px;left:0;height:2px;background:linear-gradient(90deg,var(--azure),var(--gold));transition:width .4s ease;z-index:99;}
+#deck{position:fixed;inset:0;top:52px;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateX(40px);pointer-events:none;transition:opacity .5s ease,transform .5s ease;overflow:hidden;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.prev{opacity:0;transform:translateX(-40px);}
+.bg-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(91,170,232,.08) 1px,transparent 1px);background-size:36px 36px;}
+.bg-glow{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.slide-inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:32px 48px 20px;overflow-y:auto;}
+.slide-inner::-webkit-scrollbar{width:4px;}
+.slide-inner::-webkit-scrollbar-thumb{background:rgba(91,170,232,.3);border-radius:2px;}
+.slide-tag{font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.slide-title{font-family:var(--ff-head);font-size:clamp(1.5rem,3vw,2.4rem);color:var(--white);line-height:1.2;margin-bottom:6px;}
+.slide-sub{font-size:.95rem;color:var(--muted);margin-bottom:28px;line-height:1.5;}
+.section-head{font-family:var(--ff-head);font-size:1.15rem;color:var(--sky);margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid rgba(91,170,232,.2);}
+.divider{height:1px;background:linear-gradient(90deg,rgba(41,128,212,.4),transparent);margin:20px 0;}
+.card{background:rgba(21,48,96,.55);border:1px solid rgba(91,170,232,.15);border-radius:12px;padding:18px 22px;}
+.card-grid{display:grid;gap:16px;}
+.card-grid.col2{grid-template-columns:1fr 1fr;}
+.cover-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 60px;position:relative;}
+.cover-logo{font-family:var(--ff-head);font-size:clamp(2.8rem,7vw,5.5rem);color:var(--white);line-height:1;margin-bottom:12px;text-shadow:0 0 60px rgba(91,170,232,.3);}
+.cover-logo span{color:var(--gold);}
+.cover-full-title{font-size:clamp(.88rem,1.5vw,1.08rem);color:var(--frost);max-width:820px;line-height:1.65;margin-bottom:30px;border-left:3px solid var(--azure);padding-left:18px;}
+.badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px;}
+.badge{padding:6px 16px;border-radius:20px;font-size:.78rem;font-weight:600;letter-spacing:.05em;}
+.badge-phase{background:rgba(232,184,75,.15);border:1px solid rgba(232,184,75,.4);color:var(--gold);}
+.badge-design{background:rgba(41,128,212,.15);border:1px solid rgba(41,128,212,.4);color:var(--sky);}
+.badge-n{background:rgba(62,201,142,.12);border:1px solid rgba(62,201,142,.35);color:var(--green);}
+.cover-meta{display:flex;gap:32px;flex-wrap:wrap;}
+.cover-meta-item label{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:3px;}
+.cover-meta-item span{font-size:.95rem;color:var(--white);}
+.ingredient-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(41,128,212,.12);border:1px solid rgba(41,128,212,.25);border-radius:20px;padding:5px 12px;font-size:.78rem;color:var(--frost);margin:3px;}
+.ingredient-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--azure);}
+.mechanism-flow{background:rgba(13,35,71,.6);border:1px solid rgba(91,170,232,.15);border-radius:14px;padding:22px;}
+.mflow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;}
+.mflow-step:last-child{margin-bottom:0;}
+.mflow-num{min-width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--azure),var(--blue));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px;}
+.mflow-text{font-size:.88rem;color:var(--frost);line-height:1.55;}
+.mflow-text strong{color:var(--sky);}
+.obj-group{margin-bottom:22px;}
+.obj-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:12px;}
+.obj-label.primer{background:rgba(232,184,75,.15);color:var(--gold);}
+.obj-label.sekonder{background:rgba(91,170,232,.15);color:var(--sky);}
+.obj-item{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-radius:8px;margin-bottom:8px;background:rgba(21,48,96,.4);border:1px solid rgba(91,170,232,.1);font-size:.9rem;color:var(--frost);line-height:1.5;}
+.obj-item .icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+.endpoint-card{background:rgba(21,48,96,.55);border-radius:12px;padding:20px 22px;border-left:4px solid var(--azure);margin-bottom:14px;}
+.endpoint-card.secondary{border-left-color:var(--sky);}
+.endpoint-card h4{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.endpoint-card.primary h4{color:var(--gold);}
+.endpoint-card.secondary h4{color:var(--sky);}
+.endpoint-card p{font-size:.9rem;color:var(--frost);line-height:1.55;}
+.timepoints{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.tp{padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:600;background:rgba(41,128,212,.15);border:1px solid rgba(41,128,212,.3);color:var(--sky);}
+.tp.highlight{background:rgba(232,184,75,.15);border-color:rgba(232,184,75,.4);color:var(--gold);}
+.tp.green{background:rgba(62,201,142,.12);border-color:rgba(62,201,142,.3);color:var(--green);}
+.timeline-wrap{padding:10px 0 20px;}
+.timeline-phases{display:flex;align-items:stretch;gap:0;position:relative;margin-bottom:24px;}
+.timeline-phases::before{content:'';position:absolute;top:32px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--azure),var(--sky),var(--frost));z-index:0;}
+.tphase{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;padding:0 4px;}
+.tphase-dot{width:18px;height:18px;border-radius:50%;background:var(--azure);border:3px solid var(--ink);margin-bottom:10px;}
+.tphase-dot.gold{background:var(--gold);}
+.tphase-dot.green{background:var(--green);}
+.tphase-label{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:4px;}
+.tphase-value{font-size:.85rem;font-weight:600;color:var(--white);text-align:center;}
+.tphase-note{font-size:.65rem;color:var(--sky);text-align:center;margin-top:3px;}
+.arms-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px;}
+.arm-box{border-radius:10px;padding:14px 16px;border:1px solid rgba(91,170,232,.2);}
+.arm-box.test{background:rgba(232,184,75,.08);border-color:rgba(232,184,75,.25);}
+.arm-box.active{background:rgba(41,128,212,.1);border-color:rgba(41,128,212,.3);}
+.arm-box.placebo{background:rgba(21,48,96,.4);}
+.arm-tag{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.arm-box.test .arm-tag{color:var(--gold);}
+.arm-box.active .arm-tag{color:var(--azure);}
+.arm-box.placebo .arm-tag{color:var(--muted);}
+.arm-name{font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:4px;}
+.arm-dose{font-size:.78rem;color:var(--frost);}
+.arm-n{display:inline-block;margin-top:8px;padding:2px 10px;border-radius:12px;font-size:.72rem;font-weight:700;background:rgba(91,170,232,.12);color:var(--sky);}
+.design-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.dbadge{padding:5px 14px;border-radius:20px;font-size:.78rem;background:rgba(21,48,96,.6);border:1px solid rgba(91,170,232,.2);color:var(--frost);}
+.dbadge strong{color:var(--sky);}
+.pop-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.pop-col{border-radius:12px;padding:20px 22px;}
+.pop-col.include{background:rgba(62,201,142,.05);border:1px solid rgba(62,201,142,.25);}
+.pop-col.exclude{background:rgba(232,91,91,.05);border:1px solid rgba(232,91,91,.2);}
+.pop-col-head{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
+.pop-col.include .pop-col-head{color:var(--green);}
+.pop-col.exclude .pop-col-head{color:var(--red);}
+.pop-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:.85rem;color:var(--frost);line-height:1.5;}
+.pop-item .bullet{min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.include .bullet{background:rgba(62,201,142,.2);color:var(--green);}
+.exclude .bullet{background:rgba(232,91,91,.2);color:var(--red);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.stat-card{background:rgba(21,48,96,.5);border:1px solid rgba(91,170,232,.15);border-radius:12px;padding:18px 20px;}
+.stat-card h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sky);margin-bottom:12px;}
+.stat-item{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(91,170,232,.08);font-size:.88rem;}
+.stat-item:last-child{border-bottom:none;}
+.stat-item .key{color:var(--muted);}
+.stat-item .val{color:var(--white);font-weight:600;}
+.power-vis{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.power-bar{flex:1;height:10px;border-radius:5px;background:rgba(41,128,212,.15);overflow:hidden;}
+.power-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--azure),var(--sky));}
+.power-label{font-size:.8rem;color:var(--gold);font-weight:700;white-space:nowrap;}
+.safety-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.safety-card{background:rgba(21,48,96,.5);border:1px solid rgba(91,170,232,.15);border-radius:12px;padding:16px 18px;}
+.safety-card h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sky);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.safety-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid rgba(91,170,232,.07);font-size:.83rem;color:var(--frost);line-height:1.45;}
+.safety-item:last-child{border-bottom:none;}
+.safety-dot{min-width:7px;height:7px;border-radius:50%;background:var(--azure);flex-shrink:0;margin-top:5px;}
+.slide-footer{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:10px 48px;border-top:1px solid rgba(91,170,232,.1);font-size:.7rem;color:var(--muted);flex-shrink:0;}
+.ref-note{margin-top:16px;background:rgba(41,128,212,.06);border:1px solid rgba(91,170,232,.15);border-radius:8px;padding:10px 14px;font-size:.72rem;color:var(--muted);line-height:1.5;}
+.ref-note strong{color:var(--sky);}
+.info-box{margin-top:14px;border-radius:10px;padding:13px 17px;display:flex;gap:12px;align-items:flex-start;font-size:.83rem;line-height:1.55;}
+@media(max-width:768px){.slide-inner{padding:20px 20px 16px;}.slide-footer{padding:8px 20px;}.card-grid.col2,.pop-grid,.stats-grid,.safety-grid,.arms-row{grid-template-columns:1fr;}.cover-wrap{padding:24px 24px;}.cover-logo{font-size:2.4rem;}}
+</style>
+</head>
+<body>
+<div id="nav"><span class="nav-brand">COllAGEN UP Hair</span><span class="nav-counter"><span id="cur">1</span> / <span id="tot">8</span></span><div class="nav-btns"><button class="nav-btn" id="btn-prev">← Geri</button><button class="nav-btn" id="btn-next">İleri →</button></div></div>
+<div id="progress-bar"></div>
+<div id="deck">
+
+<!-- SLIDE 1: COVER -->
+<div class="slide active" id="s1">
+  <div class="bg-dots"></div>
+  <div class="bg-glow" style="width:600px;height:600px;background:radial-gradient(circle,rgba(41,128,212,.12),transparent 70%);top:-100px;right:-100px;"></div>
+  <div class="bg-glow" style="width:400px;height:400px;background:radial-gradient(circle,rgba(232,184,75,.08),transparent 70%);bottom:50px;left:-50px;"></div>
+  <div class="cover-wrap">
+    <div class="cover-logo">COll<span>AGEN</span><br>UP Hair</div>
+    <div class="cover-full-title">Saç Dökülmesi Şikayeti Olan Bireylerde DNA Sertifikalı Bitkisel Özler İçeren Oral Kolajen-Keratin Kompleksinin Erken (4. Hafta) ve Geç (12. Hafta) Dönem Etkinliğinin Standart Kolajen ile Karşılaştırmalı İncelenmesi</div>
+    <div class="badge-row">
+      <span class="badge badge-phase">Faz III Klinik Çalışma</span>
+      <span class="badge badge-design">Üçlü Kör · Randomize · 3 Kol</span>
+      <span class="badge badge-n">N = 120 Gönüllü</span>
+    </div>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>Tasarım</label><span>Çok Merkezli, Aktif + Plasebo Kontrollü</span></div>
+      <div class="cover-meta-item"><label>Süre</label><span>16 Hafta (12 Hf Müdahale + 4 Hf Takip)</span></div>
+      <div class="cover-meta-item"><label>Kayıt</label><span>DRKS / ICTRP</span></div>
+      <div class="cover-meta-item"><label>Yıl</label><span>2026</span></div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Klinik Araştırma Protokolü v2 (Laing 2020 / Bolke 2019 uyumlu)</span><span>Gizli / Confidential</span></div>
+</div>
+
+<!-- SLIDE 2: ARKA PLAN -->
+<div class="slide" id="s2">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 02</div>
+    <div class="slide-title">Arka Plan ve Rasyonel</div>
+    <div class="slide-sub">Hastalık yükü, formülasyon mantığı ve etki mekanizması</div>
+    <div class="card-grid col2" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="section-head">🔬 Hastalık Yükü</div>
+        <div class="mflow-step"><div class="mflow-num">1</div><div class="mflow-text">Androgenetik Alopesi, tüm etnisitelerde erkeklerin <strong>%50'sini</strong>, kadınların <strong>%25'ini</strong> etkileyen en yaygın saç dökülmesi formudur.</div></div>
+        <div class="mflow-step"><div class="mflow-num">2</div><div class="mflow-text">Telogen Effluvium; stres, beslenme bozukluğu ve hormonal değişimlere bağlı olarak <strong>difüz saç incelmesine</strong> yol açar.</div></div>
+        <div class="mflow-step"><div class="mflow-num">3</div><div class="mflow-text">Saç dökülmesi yalnızca estetik değil, <strong>yaşam kalitesini ve psikolojik refahı</strong> doğrudan etkileyen bir sorundur.</div></div>
+        <div class="mflow-step"><div class="mflow-num">4</div><div class="mflow-text">Mevcut tedavilerin (Minoksidil, Finasterid) yan etki profilleri ve yüksek geri dönüş riski, <strong>güvenli nutrasyötikal alternatiflere</strong> olan talebi artırmaktadır.</div></div>
+      </div>
+      <div class="card">
+        <div class="section-head">💊 Formülasyon Bileşenleri</div>
+        <div style="margin-bottom:12px;">
+          <div class="ingredient-pill"><div class="dot"></div>%15 Hidrolize Kolajen</div>
+          <div class="ingredient-pill"><div class="dot"></div>%1,25 Hidrolize Keratin</div>
+          <div class="ingredient-pill"><div class="dot"></div>Hyaluronik Asit</div>
+          <div class="ingredient-pill"><div class="dot"></div>Saw Palmetto</div>
+          <div class="ingredient-pill"><div class="dot"></div>Isırgan Özü</div>
+          <div class="ingredient-pill"><div class="dot"></div>Propolis</div>
+          <div class="ingredient-pill"><div class="dot"></div>Biotin (50 µg)</div>
+          <div class="ingredient-pill"><div class="dot"></div>Çinko (3 mg)</div>
+          <div class="ingredient-pill"><div class="dot"></div>C Vitamini (80 mg)</div>
+          <div class="ingredient-pill"><div class="dot"></div>E Vitamini (2,3 mg)</div>
+        </div>
+        <div style="font-size:.78rem;color:var(--muted);border-top:1px solid rgba(91,170,232,.12);padding-top:10px;">🔑 <strong style="color:var(--gold);">Stratejik Hedef:</strong> <span style="color:var(--frost);">DNA sertifikalı bitkisel ekstraktların biyoyararlanımı ve etkinliği artırdığını standart yüksek MW ürüne karşı kanıtlamak.</span></div>
+      </div>
+    </div>
+    <div class="mechanism-flow">
+      <div class="section-head">⚙️ Etki Mekanizması Zinciri</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="background:rgba(41,128,212,.1);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.4rem;margin-bottom:6px;">🧬</div><div style="font-size:.78rem;color:var(--sky);font-weight:600;margin-bottom:4px;">Oral Alım</div><div style="font-size:.72rem;color:var(--muted);">Küçük peptitler intestinal emilim ile dolaşıma girer; di- ve tri-peptitlere metabolize olur</div></div>
+        <div style="background:rgba(41,128,212,.1);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.4rem;margin-bottom:6px;">🔄</div><div style="font-size:.78rem;color:var(--sky);font-weight:600;margin-bottom:4px;">Fibroblast Stimülasyonu</div><div style="font-size:.72rem;color:var(--muted);">Kolajen peptitleri dermal fibroblastları uyarır; ECM sentezini artırır</div></div>
+        <div style="background:rgba(41,128,212,.1);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.4rem;margin-bottom:6px;">🧪</div><div style="font-size:.78rem;color:var(--sky);font-weight:600;margin-bottom:4px;">DHT Blokajı</div><div style="font-size:.72rem;color:var(--muted);">Saw Palmetto 5α-redüktaz enzimini inhibe eder</div></div>
+        <div style="background:rgba(41,128,212,.1);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.4rem;margin-bottom:6px;">💪</div><div style="font-size:.78rem;color:var(--sky);font-weight:600;margin-bottom:4px;">Yapısal Güçlenme</div><div style="font-size:.72rem;color:var(--muted);">Keratin desteği ile saç şaftı kalınlaşması; C vitamini kolajen kofaktörü</div></div>
+      </div>
+    </div>
+    <div class="ref-note"><strong>Referans:</strong> Laing ve ark. (2020) konfokkal mikroskobi ile kollajen yapısında anlamlı iyileşme (p=0.044); Bolke ve ark. (2019) hidrasyon +%28, pürüzlülük -%27, elastikiyet ve yoğunlukta anlamlı fark (tümü p&lt;0.0004). Her iki çalışma da benzer formülasyonu (2,5g kolajen peptit + aserola + C vit + E vit + biotin + çinko) test etmiştir.</div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Arka Plan</span><span>Slayt 02 / 08</span></div>
+</div>
+
+<!-- SLIDE 3: AMAÇLAR -->
+<div class="slide" id="s3">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 03</div>
+    <div class="slide-title">Çalışma Amaçları</div>
+    <div class="slide-sub">Primer ve sekonder araştırma hedefleri</div>
+    <div class="obj-group">
+      <div class="obj-label primer">🎯 Primer Amaçlar</div>
+      <div class="obj-item"><div class="icon">🔬</div><div>COllAGEN UP Hair'in <strong>4. ve 12. haftalarda</strong> TrichoScan ile ölçülen total saç yoğunluğunu ve saç şaftı kalınlığını standart balık kolajeni ve plaseboya kıyasla <strong>istatistiksel olarak anlamlı biçimde artırıp artırmadığını</strong> test etmek.</div></div>
+      <div class="obj-item"><div class="icon">⏱️</div><div><strong>4. haftada erken etkinlik</strong> kanıtı sağlamak; üretici beyanı olan "4 haftalık etki" iddiasını kontrollü klinik verilere dayandırmak.</div></div>
+      <div class="obj-item"><div class="icon">🧬</div><div>DNA sertifikalı bitkisel ekstraktların biyoyararlanımı ve <strong>aktif bileşen emilimini artırdığını</strong> standart yüksek moleküler ağırlıklı ürüne karşı doğrulamak.</div></div>
+      <div class="obj-item"><div class="icon">📊</div><div>12 haftalık müdahale sonrası <strong>4 haftalık takip döneminde (T16)</strong> elde edilen iyileşmelerin sürdürülebilirliğini değerlendirmek (Bolke ve ark. 2019 modeli).</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="obj-group">
+      <div class="obj-label sekonder">📊 Sekonder Amaçlar</div>
+      <div class="card-grid col2">
+        <div>
+          <div class="obj-item"><div class="icon">🖥️</div><div>VISIA® sistemi ile por genişliği ve cilt doku kalitesindeki değişimi sayısal olarak ölçmek (T0, T4, T12, T16).</div></div>
+          <div class="obj-item"><div class="icon">🔭</div><div>Punch biyopsi ile epidermal kalınlık ve kolajen lif yoğunluğundaki histolojik değişimi immünohistokimyasal boyama ile kanıtlamak.</div></div>
+        </div>
+        <div>
+          <div class="obj-item"><div class="icon">🩸</div><div>Tatlandırıcı güvenlik profili; Sukraloz ve Asesülfam K'nın glisemik parametrelere (açlık kan şekeri, insülin) etkisini saptamak.</div></div>
+          <div class="obj-item"><div class="icon">📋</div><div>Anket bazlı GI tolerabilite ve <strong>öznel cilt/saç değerlendirmesi</strong> (Laing 2020 anketi modeli) ile formülün günlük kullanım uyumunu belirlemek.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Amaçlar</span><span>Slayt 03 / 08</span></div>
+</div>
+
+<!-- SLIDE 4: ENDPOINTS -->
+<div class="slide" id="s4">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 04</div>
+    <div class="slide-title">Sonlanım Noktaları</div>
+    <div class="slide-sub">Primer, sekonder ve sürdürülebilirlik değerlendirme kriterleri (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div class="endpoint-card primary">
+      <h4>🎯 Primer Sonlanım Noktaları</h4>
+      <p><strong>TrichoScan (Fototrikogram)</strong> ile ölçülen;</p>
+      <ul style="list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+        <li style="font-size:.88rem;color:var(--frost);display:flex;gap:8px;"><span style="color:var(--gold);">▶</span> Başlangıca göre <strong>total saç yoğunluğu değişimi</strong> (saç/cm²) — T4 ve T12</li>
+        <li style="font-size:.88rem;color:var(--frost);display:flex;gap:8px;"><span style="color:var(--gold);">▶</span> <strong>Saç şaftı kalınlığı</strong> değişimi (μm) — T4 ve T12</li>
+      </ul>
+      <div class="timepoints"><span class="tp highlight">T0 — Baseline</span><span class="tp highlight">T4 — 4. Hafta</span><span class="tp">T12 — 12. Hafta (Final)</span><span class="tp green">T16 — 16. Hafta (Sürdürülebilirlik)</span></div>
+    </div>
+    <div class="card-grid col2" style="margin-top:0;">
+      <div class="endpoint-card secondary">
+        <h4>📷 Sekonder — Cilt (VISIA® + Cihazlar)</h4>
+        <p>Por genişliği, doku kalitesi dijital skorlaması. <strong>Corneometer CM 825</strong> ile cilt hidrasyon (a.u.), <strong>Cutometer MPA 580</strong> ile cilt elastikiyeti (R2). Ölçümler standardize koşullarda (21±1°C, %50±5 nem), en az 30 dk aklimatizasyon sonrası.</p>
+        <div class="timepoints"><span class="tp">T0</span><span class="tp">T4</span><span class="tp">T12</span><span class="tp green">T16</span></div>
+      </div>
+      <div class="endpoint-card secondary">
+        <h4>🔬 Sekonder — Histolojik (Biyopsi)</h4>
+        <p>3 mm punch biyopsi → IHK boyama: <strong>Epidermal kalınlık</strong> ve <strong>kolajen lif yoğunluğu</strong> kantitatif ölçümü. Kör patolog değerlendirmesi (zaman noktasına kör — Laing modeli).</p>
+        <div class="timepoints"><span class="tp">T0</span><span class="tp">T12</span></div>
+      </div>
+      <div class="endpoint-card secondary">
+        <h4>🩸 Sekonder — Glisemik İzlem</h4>
+        <p>Açlık kan şekeri ve insülin düzeyleri; tatlandırıcı güvenlik doğrulaması. HOMA-IR hesabı.</p>
+        <div class="timepoints"><span class="tp">T0</span><span class="tp">T4</span><span class="tp">T12</span></div>
+      </div>
+      <div class="endpoint-card secondary">
+        <h4>📝 Sekonder — Öznel Değerlendirme & GI Tolerabilite</h4>
+        <p>Saç ve cilt kalitesi anketi (Laing 2020 modeli: 5 puan Likert); kuruluk, elastikiyet, saç dökülmesi, parlaklık. GI tolerabilite (şişkinlik, gaz). <strong>Uyum izlemi:</strong> 29., 57. ve 85. günlerde.</p>
+        <div class="timepoints"><span class="tp">T4</span><span class="tp">T8</span><span class="tp">T12</span><span class="tp green">T16</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Sonlanım Noktaları</span><span>Slayt 04 / 08</span></div>
+</div>
+
+<!-- SLIDE 5: STUDY DESIGN -->
+<div class="slide" id="s5">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 05</div>
+    <div class="slide-title">Çalışma Tasarımı</div>
+    <div class="slide-sub">Randomizasyon, üçlü körleme, kollar ve zaman çizelgesi (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div class="design-badges">
+      <span class="dbadge">🏥 <strong>Çok Merkezli</strong></span>
+      <span class="dbadge">🎲 <strong>Randomize (Blok)</strong></span>
+      <span class="dbadge">👁️👁️👁️ <strong>Üçlü Kör</strong></span>
+      <span class="dbadge">💊 <strong>Plasebo Kontrollü</strong></span>
+      <span class="dbadge">⚖️ <strong>Aktif Kontrollü</strong></span>
+      <span class="dbadge">📊 <strong>3 Paralel Kol</strong></span>
+      <span class="dbadge">🔁 <strong>4 Hf Takip (T16)</strong></span>
+    </div>
+    <div class="info-box" style="background:rgba(232,184,75,.06);border:1px solid rgba(232,184,75,.2);color:var(--frost);margin-bottom:18px;">
+      <span style="font-size:1.2rem;">👁️</span>
+      <div><strong style="color:var(--gold);">Üçlü Körleme (Laing 2020):</strong> (1) Katılımcı, (2) ürünü uygulayan personel ve (3) sonuçları değerlendiren araştırmacı körlenir. TrichoScan/histoloji değerlendiricisi ek olarak <strong>görüntünün alınma zamanına (T0/T12)</strong> kör tutulur. Test ürünü ve plasebo özdeş ampullerde (25 mL) sunulur; plasebo besin değeri içermez.</div>
+    </div>
+    <div class="timeline-wrap">
+      <div class="section-head" style="margin-bottom:20px;">⏱️ Çalışma Zaman Çizelgesi</div>
+      <div class="timeline-phases">
+        <div class="tphase"><div class="tphase-dot"></div><div class="tphase-label">Tarama</div><div class="tphase-value">-2. Hf</div><div class="tphase-note">Uygunluk & IK</div></div>
+        <div class="tphase"><div class="tphase-dot gold"></div><div class="tphase-label">Başlangıç</div><div class="tphase-value">T0</div><div class="tphase-note">Randomizasyon</div></div>
+        <div class="tphase"><div class="tphase-dot"></div><div class="tphase-label">Erken Etki</div><div class="tphase-value">T4</div><div class="tphase-note">⚡ Ara Analiz + Uyum</div></div>
+        <div class="tphase"><div class="tphase-dot"></div><div class="tphase-label">Orta İzlem</div><div class="tphase-value">T8</div><div class="tphase-note">Güvenlik + Uyum</div></div>
+        <div class="tphase"><div class="tphase-dot green"></div><div class="tphase-label">Final</div><div class="tphase-value">T12</div><div class="tphase-note">✅ Primer Endpoint</div></div>
+        <div class="tphase"><div class="tphase-dot" style="background:var(--frost);"></div><div class="tphase-label">Takip</div><div class="tphase-value">T16</div><div class="tphase-note">🔁 Sürdürülebilirlik</div></div>
+      </div>
+      <div class="arms-row">
+        <div class="arm-box test"><div class="arm-tag">Test Grubu</div><div class="arm-name">COllAGEN UP Hair</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>Hidrolize Kolajen + Keratin<br>+ DNA Sertifikalı Bitkisel Özler<br>+ Biotin + Çinko + Vit C + Vit E</div><span class="arm-n">n = 40</span></div>
+        <div class="arm-box active"><div class="arm-tag">Aktif Kontrol</div><div class="arm-name">Standart Balık Kolajeni</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>Yüksek MW Deniz Kolajeni<br>Aroma & renk eşleştirilmiş</div><span class="arm-n">n = 40</span></div>
+        <div class="arm-box placebo"><div class="arm-tag">Plasebo</div><div class="arm-name">Eşleştirilmiş Plasebo</div><div class="arm-dose">25 mL inaktif likit<br>K-sorbat, Na-benzoat, CMC,<br>sitrik asit, doğal aroma, su<br>Besin değeri yok (Laing modeli)</div><span class="arm-n">n = 40</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Çalışma Tasarımı</span><span>Slayt 05 / 08</span></div>
+</div>
+
+<!-- SLIDE 6: POPULATION -->
+<div class="slide" id="s6">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 06</div>
+    <div class="slide-title">Araştırma Popülasyonu</div>
+    <div class="slide-sub">Dahil etme ve dışlama kriterleri · N = 120 (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+      <span class="badge badge-design">25–60 yaş · Erkek & Kadın</span>
+      <span class="badge badge-n">Ludwig Evre I–II (K) · Norwood II–IV (E)</span>
+      <span class="badge badge-phase">AGA veya Telogen Effluvium Tanılı</span>
+    </div>
+    <div class="pop-grid">
+      <div class="pop-col include">
+        <div class="pop-col-head">✅ Dahil Etme Kriterleri</div>
+        <div class="pop-item"><div class="bullet include">✓</div><div>25–60 yaş arası sağlıklı erkek ve kadın gönüllüler</div></div>
+        <div class="pop-item"><div class="bullet include">✓</div><div>Dermatolojik muayene ile doğrulanmış <strong>hafif–orta AGA veya TE</strong></div></div>
+        <div class="pop-item"><div class="bullet include">✓</div><div>Kadınlar: <strong>Ludwig I–II</strong>; Erkekler: <strong>Norwood-Hamilton II–IV</strong></div></div>
+        <div class="pop-item"><div class="bullet include">✓</div><div>Mevcut yaşam alışkanlıklarını korumayı ve <strong>östrojen/progesteron tedavisine başlamamayı veya değiştirmemeyi</strong> taahhüt etmek</div></div>
+        <div class="pop-item"><div class="bullet include">✓</div><div>Ölçüm günlerinde ölçüm alanına <strong>kozmetik ürün uygulamamayı</strong> kabul etmek</div></div>
+        <div class="pop-item"><div class="bullet include">✓</div><div>Yazılı bilgilendirilmiş onam formunu imzalamış olmak</div></div>
+      </div>
+      <div class="pop-col exclude">
+        <div class="pop-col-head">🚫 Dışlama Kriterleri</div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Son <strong>6 ay</strong> içinde Minoksidil, Finasterid, PRP, Mezoterapi veya Saç Ekimi</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Son <strong>3 ay</strong> içinde yüksek doz biotin, oral kolajen, çinko veya saç vitamini kompleksi</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div><strong>Sistemik ilaç:</strong> immünosupresifler, antiinflamatuvarlar, analjezikler, antihistaminikler, antibiyotikler (Laing 2020)</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Ölçüm alanında <strong>topikal ilaç</strong> veya son 1 ay içinde yoğun cilt/saç bakım ürünü (Laing 2020)</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Majör/kronik dahili hastalık, anemi (Fe, B12), aktif tiroid disfonksiyonu, PCOS</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Çalışma süresince <strong>güneşlenme veya solaryum</strong> (Bolke 2019)</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Bilinen <strong>kanser</strong>, gebelik veya laktasyon (Bolke 2019)</div></div>
+        <div class="pop-item"><div class="bullet exclude">✕</div><div>Propolis, Isırgan veya tatlandırıcılara aşırı duyarlılık; <strong>skarlı alopesi</strong></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Popülasyon</span><span>Slayt 06 / 08</span></div>
+</div>
+
+<!-- SLIDE 7: STATS -->
+<div class="slide" id="s7">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 07</div>
+    <div class="slide-title">İstatistiksel Analiz</div>
+    <div class="slide-sub">Örneklem büyüklüğü gerekçesi ve analiz planı (ICH E9 uyumlu · SAS 9.4)</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h4>📐 Örneklem Büyüklüğü</h4>
+        <div class="stat-item"><span class="key">Güç (Power)</span><span class="val">%80</span></div>
+        <div class="stat-item"><span class="key">α (iki yönlü)</span><span class="val">0.05</span></div>
+        <div class="stat-item"><span class="key">Etki büyüklüğü</span><span class="val">d ≥ 0.6</span></div>
+        <div class="stat-item"><span class="key">Dropout</span><span class="val">%15</span></div>
+        <div class="stat-item"><span class="key">Her kol / Toplam</span><span class="val">n=40 / N=120</span></div>
+        <div class="stat-item"><span class="key">Yazılım</span><span class="val">SAS 9.4 (Windows)</span></div>
+        <div class="power-vis"><span style="font-size:.72rem;color:var(--muted);">Güç</span><div class="power-bar"><div class="power-fill" style="width:80%;"></div></div><span class="power-label">%80</span></div>
+      </div>
+      <div class="stat-card">
+        <h4>📊 Birincil Analiz (Laing / Bolke modeli)</h4>
+        <div class="stat-item"><span class="key">Gruplar arası</span><span class="val">Bağımsız örneklem t-testi</span></div>
+        <div class="stat-item"><span class="key">Grup içi (T12 vs T0)</span><span class="val">Eşleştirilmiş t-test</span></div>
+        <div class="stat-item"><span class="key">Tekrarlayan ölçüm</span><span class="val">RM-ANOVA</span></div>
+        <div class="stat-item"><span class="key">Post-hoc</span><span class="val">Tukey HSD</span></div>
+        <div class="stat-item"><span class="key">Analiz seti</span><span class="val">PP (birincil) + ITT</span></div>
+        <div class="stat-item"><span class="key">Kayıp veri</span><span class="val">MMRM</span></div>
+      </div>
+      <div class="stat-card">
+        <h4>⚡ Ara Analiz (T4) & Düzeltmeler</h4>
+        <div class="stat-item"><span class="key">Ara analiz</span><span class="val">O'Brien-Fleming</span></div>
+        <div class="stat-item"><span class="key">Alpha harcama</span><span class="val">Lan-DeMets</span></div>
+        <div class="stat-item"><span class="key">Çoklu karşılaştırma</span><span class="val">Bonferroni</span></div>
+        <div class="stat-item"><span class="key">Karar</span><span class="val">Bağımsız DSMB</span></div>
+        <div class="stat-item"><span class="key">Standart</span><span class="val">ICH E9</span></div>
+      </div>
+      <div class="stat-card">
+        <h4>🔧 Destekleyici & Sürdürülebilirlik</h4>
+        <div class="stat-item"><span class="key">Öznel değerlendirme</span><span class="val">Mann-Whitney-Wilcoxon</span></div>
+        <div class="stat-item"><span class="key">Histoloji</span><span class="val">Wilcoxon Signed-Rank</span></div>
+        <div class="stat-item"><span class="key">Glisemik izlem</span><span class="val">Paired t-test</span></div>
+        <div class="stat-item"><span class="key">GI tolerabilite</span><span class="val">Fisher's Exact</span></div>
+        <div class="stat-item"><span class="key">Sürdürülebilirlik</span><span class="val">T16 vs T0, T16 vs T12</span></div>
+      </div>
+    </div>
+    <div class="ref-note"><strong>Popülasyon Tanımları:</strong> <strong>ITT (Güvenlik)</strong> = en az bir doz alan tüm randomize katılımcılar. <strong>PP</strong> = dahil/dışlama kriterlerine uyan, majör ihlali olmayan, onamını geri çekmemiş katılımcılar. Primer etkinlik analizi PP setinde; sensitivite analizi ITT setinde yapılır (Laing 2020 / Bolke 2019).</div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – İstatistik</span><span>Slayt 07 / 08</span></div>
+</div>
+
+<!-- SLIDE 8: SAFETY -->
+<div class="slide" id="s8">
+  <div class="bg-dots"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Slayt 08</div>
+    <div class="slide-title">Güvenlik ve Tolerabilite</div>
+    <div class="slide-sub">Dermatolojik muayene, izlem parametreleri ve bağımsız denetim (Laing 2020 / Bolke 2019 uyumlu)</div>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <h4>🩺 Dermatolojik Muayene (Bolke 2019)</h4>
+        <div class="safety-item"><div class="safety-dot"></div><div>Çalışma öncesi, sırasında ve sonrasında standart dermatolojik değerlendirme</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div><strong>4 puanlı skala:</strong> 0=bulgu yok, 1=hafif, 2=orta, 3=şiddetli reaksiyon</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>Tolerabilite öznel derecelendirmesi: Çok iyi / İyi / Kararsız / Kötü / Çok kötü</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>Her bulgu T0, T4, T12 ve T16'da belgelenir</div></div>
+      </div>
+      <div class="safety-card">
+        <h4>🩸 Biyokimyasal İzlem</h4>
+        <div class="safety-item"><div class="safety-dot"></div><div>Tam kan sayımı (CBC): T0, T4, T12</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>KC enzimleri (AST, ALT, GGT) + böbrek fonksiyonu</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>TSH — T0 ve T12</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div><strong>Glisemik:</strong> AKŞ + insülin (HOMA-IR) — T0, T4, T12</div></div>
+      </div>
+      <div class="safety-card">
+        <h4>📋 Uyum & Tolerabilite İzlemi (Laing 2020)</h4>
+        <div class="safety-item"><div class="safety-dot"></div><div><strong>Uyum kontrolleri:</strong> 29., 57. ve 85. günlerde</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>GI anketi: Şişkinlik, gaz, bulantı, ishal/kabızlık (Likert)</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>AE ve konkomitan tedavi değişiklikleri 29., 57., 85. günlerde belgelenir</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>Öznel ürün değerlendirme anketi T12 ve T16'da doldurulur</div></div>
+      </div>
+      <div class="safety-card">
+        <h4>⚠️ AE/SAE Yönetimi</h4>
+        <div class="safety-item"><div class="safety-dot"></div><div>Tüm AE'ler şiddet, nedensellik ve sonuca göre kodlanır</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>SAE → 24 saat içinde sponsor + Etik Kurul bildirimi</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>Bağımsız DSMB güvenlik verilerini kör olmadan inceler</div></div>
+        <div class="safety-item"><div class="safety-dot"></div><div>Allerji: Acil müdahale protokolleri her merkezde hazır</div></div>
+      </div>
+    </div>
+    <div class="info-box" style="background:rgba(62,201,142,.06);border:1px solid rgba(62,201,142,.2);color:var(--frost);">
+      <span style="font-size:1.2rem;">🛡️</span>
+      <div><strong style="color:var(--green);">Standardize Ölçüm Koşulları:</strong> Tüm ölçümler klimatize odada (21±1°C, %50±5 nem), ≥30 dk aklimatizasyon sonrası yapılır. Katılımcılar ölçüm sabahı ölçüm alanına kozmetik uygulamamalıdır. Çalışma DRKS/ICTRP'de kayıtlıdır; Helsinki Deklarasyonu ve ulusal mevzuata tam uyum sağlanır. Etik kurul onayı alınmıştır.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>COllAGEN UP Hair – Güvenlik</span><span>Slayt 08 / 08</span></div>
+</div>
+
+</div>
+<script>
+const slides=document.querySelectorAll('.slide');const total=slides.length;let cur=0;document.getElementById('tot').textContent=total;
+function go(n){slides[cur].classList.remove('active');slides[cur].classList.add('prev');setTimeout(()=>slides[cur].classList.remove('prev'),550);cur=(n+total)%total;slides[cur].classList.add('active');document.getElementById('cur').textContent=cur+1;document.getElementById('progress-bar').style.width=((cur+1)/total*100)+'%';}
+document.getElementById('btn-next').addEventListener('click',()=>go(cur+1));document.getElementById('btn-prev').addEventListener('click',()=>go(cur-1));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(cur-1);});
+let tx=0;document.addEventListener('touchstart',e=>tx=e.changedTouches[0].clientX,{passive:true});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){dx<0?go(cur+1):go(cur-1);}},{passive:true});
+document.getElementById('progress-bar').style.width=(1/total*100)+'%';
+</script>
+</body>
+</html>
