@@ -3,25 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="COllAGEN UP Gold – Düşük molekül ağırlıklı 5g oral sığır kolajen peptitlerinin cilt yaşlanması üzerindeki etkinliğini araştıran Faz III non-inferiority klinik protokolü.">
+<!-- DÜZELTME: Fonts preconnect eklendi (performans) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>COllAGEN UP Gold – Klinik Protokol v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--ink:#0a1628;--deep:#0f1e38;--navy:#152d50;--blue:#1b5e9e;--azure:#2479c7;--sky:#4fa3e0;--frost:#c6dcf2;--white:#ffffff;--gold:#d4a843;--gold-light:#f0cc70;--amber:#e8924a;--muted:#6e9fc2;--green:#3ab87a;--red:#e05858;--ff-head:'Cormorant Garamond',serif;--ff-body:'Nunito Sans',sans-serif;}
 html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-family:var(--ff-body);color:var(--white);}
-#nav{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(10,22,40,.93);backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,168,67,.15);display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:100;}
-.nav-brand{font-family:var(--ff-head);font-size:1.1rem;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.06em;}
+/* DÜZELTME: -webkit-backdrop-filter prefix eklendi (Safari) */
+#nav{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(10,22,40,.93);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,168,67,.15);display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:100;}
+/* DÜZELTME: background-clip standart değer + color:transparent fallback eklendi */
+.nav-brand{font-family:var(--ff-head);font-size:1.1rem;background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;letter-spacing:.06em;}
 .nav-counter{font-size:.78rem;color:var(--muted);}
 .nav-btns{display:flex;gap:10px;}
-.nav-btn{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:var(--gold-light);padding:5px 18px;border-radius:20px;cursor:pointer;font-family:var(--ff-body);font-size:.78rem;transition:all .2s;}
+.nav-btn{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:var(--gold-light);padding:5px 18px;border-radius:20px;cursor:pointer;font-family:var(--ff-body);font-size:.78rem;transition:background .2s,color .2s;}
 .nav-btn:hover{background:rgba(212,168,67,.25);color:#fff;}
+/* DÜZELTME: progress-bar transition sadece width üzerinde; all yerine spesifik özellik */
 #progress-bar{position:fixed;top:54px;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--amber));transition:width .4s ease;z-index:99;}
-#deck{position:fixed;inset:0;top:54px;}
-.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .5s ease,transform .5s ease;overflow:hidden;}
-.slide.active{opacity:1;transform:translateY(0);pointer-events:all;}
+/* DÜZELTME: inset:0 → açık top/left/right/bottom (Safari <14.1 uyumu) */
+#deck{position:fixed;top:54px;left:0;right:0;bottom:0;}
+/* DÜZELTME: pointer-events:all → pointer-events:auto (all SVG'ye özgü; HTML'de geçersiz) */
+.slide{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;opacity:0;transform:translateY(20px);pointer-events:none;transition:opacity .5s ease,transform .5s ease;overflow:hidden;}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:auto;}
 .slide.prev{opacity:0;transform:translateY(-20px);}
-.bg-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 80% 20%,rgba(27,94,158,.14),transparent),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(212,168,67,.07),transparent);}
-.bg-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(79,163,224,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,163,224,.04) 1px,transparent 1px);background-size:50px 50px;}
+.bg-mesh{position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 70% 50% at 80% 20%,rgba(27,94,158,.14),transparent),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(212,168,67,.07),transparent);}
+.bg-lines{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(79,163,224,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,163,224,.04) 1px,transparent 1px);background-size:50px 50px;}
 .slide-inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:30px 48px 18px;overflow-y:auto;}
 .slide-inner::-webkit-scrollbar{width:4px;}
 .slide-inner::-webkit-scrollbar-thumb{background:rgba(212,168,67,.25);border-radius:2px;}
@@ -32,8 +41,9 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
 .divider{height:1px;background:linear-gradient(90deg,rgba(212,168,67,.2),transparent);margin:18px 0;}
 .cover-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:36px 56px;position:relative;}
 .cover-logo{font-family:var(--ff-head);font-size:clamp(2.6rem,6.5vw,5rem);line-height:1;margin-bottom:14px;color:var(--white);}
-.cover-logo .up{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.cover-logo .gold-word{background:linear-gradient(135deg,var(--gold-light),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+/* DÜZELTME: background-clip standart değer + color:transparent fallback */
+.cover-logo .up{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
+.cover-logo .gold-word{background:linear-gradient(135deg,var(--gold-light),var(--amber));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
 .cover-tagline{font-size:.82rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
 .cover-full-title{font-size:clamp(.84rem,1.4vw,1rem);color:var(--frost);max-width:860px;line-height:1.7;margin-bottom:28px;border-left:3px solid var(--gold);padding-left:18px;}
 .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px;}
@@ -43,6 +53,8 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
 .badge-n{background:rgba(58,184,122,.12);border:1px solid rgba(58,184,122,.3);color:var(--green);}
 .badge-nonin{background:rgba(232,146,74,.12);border:1px solid rgba(232,146,74,.35);color:var(--amber);}
 .cover-meta{display:flex;gap:28px;flex-wrap:wrap;}
+/* DÜZELTME: <label> cover-meta-item içinde input'a bağlı değil; presentasyonel kullanım
+   için role="presentation" ile semantik yanlışlık giderildi (JS ile değil CSS tanımıyla) */
 .cover-meta-item label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:3px;}
 .cover-meta-item span{font-size:.92rem;color:var(--white);}
 .gold-bar{position:absolute;right:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--gold),var(--amber),transparent);border-radius:0 0 0 3px;}
@@ -130,15 +142,29 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
 .ref-note strong{color:var(--gold-light);}
 .info-box{margin-top:14px;border-radius:10px;padding:13px 17px;display:flex;gap:12px;align-items:flex-start;font-size:.83rem;line-height:1.55;}
 @media(max-width:768px){.slide-inner{padding:18px 18px 14px;}.slide-footer{padding:7px 18px;}.card-grid.col2,.pop-grid,.stats-grid,.safety-grid,.arms-row{grid-template-columns:1fr;}.cover-wrap{padding:20px 22px;}.cover-logo{font-size:2.2rem;}}
+/* DÜZELTME: prefers-reduced-motion desteği eklendi (erişilebilirlik) */
+@media(prefers-reduced-motion:reduce){
+  .slide{transition:opacity .3s ease;}
+  #progress-bar{transition:none;}
+}
 </style>
 </head>
 <body>
-<div id="nav"><span class="nav-brand">COllAGEN UP Gold</span><span class="nav-counter"><span id="cur">1</span> / <span id="tot">8</span></span><div class="nav-btns"><button class="nav-btn" id="btn-prev">← Geri</button><button class="nav-btn" id="btn-next">İleri →</button></div></div>
-<div id="progress-bar"></div>
-<div id="deck">
-
+<!-- DÜZELTME: <div id="nav"> → semantik <nav> elementi -->
+<nav id="nav">
+  <span class="nav-brand">COllAGEN UP Gold</span>
+  <span class="nav-counter"><span id="cur">1</span> / <span id="tot">8</span></span>
+  <!-- DÜZELTME: aria-label eklendi (ekran okuyucu erişilebilirliği) -->
+  <div class="nav-btns">
+    <button class="nav-btn" id="btn-prev" aria-label="Önceki slayt">← Geri</button>
+    <button class="nav-btn" id="btn-next" aria-label="Sonraki slayt">İleri →</button>
+  </div>
+</nav>
+<!-- DÜZELTME: role ve aria-label eklendi -->
+<div id="progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1"></div>
+<div id="deck" role="region" aria-label="Sunum slaytları">
 <!-- SLIDE 1: COVER -->
-<div class="slide active" id="s1">
+<div class="slide active" id="s1" role="group" aria-label="Slayt 1: Kapak">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="cover-wrap">
     <div class="gold-bar"></div>
@@ -152,18 +178,18 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
       <span class="badge badge-n">N = 150 Gönüllü</span>
     </div>
     <div class="cover-meta">
-      <div class="cover-meta-item"><label>Tasarım</label><span>Randomize, Aktif + Plasebo Kontrollü</span></div>
-      <div class="cover-meta-item"><label>Süre</label><span>16 Hafta (12 Hf Müdahale + 4 Hf Takip)</span></div>
-      <div class="cover-meta-item"><label>Formülasyon</label><span>2 kDa · %25 Sığır Kolajeni (Tip 1&3)</span></div>
-      <div class="cover-meta-item"><label>Kayıt</label><span>DRKS / ICTRP</span></div>
-      <div class="cover-meta-item"><label>Yıl</label><span>2026</span></div>
+      <!-- DÜZELTME: Presentasyonel label'lar için role="presentation" eklendi -->
+      <div class="cover-meta-item"><label role="presentation">Tasarım</label><span>Randomize, Aktif + Plasebo Kontrollü</span></div>
+      <div class="cover-meta-item"><label role="presentation">Süre</label><span>16 Hafta (12 Hf Müdahale + 4 Hf Takip)</span></div>
+      <div class="cover-meta-item"><label role="presentation">Formülasyon</label><span>2 kDa · %25 Sığır Kolajeni (Tip 1&amp;3)</span></div>
+      <div class="cover-meta-item"><label role="presentation">Kayıt</label><span>DRKS / ICTRP</span></div>
+      <div class="cover-meta-item"><label role="presentation">Yıl</label><span>2026</span></div>
     </div>
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Klinik Araştırma Protokolü v2 (Laing 2020 / Bolke 2019 uyumlu)</span><span>Gizli / Confidential</span></div>
 </div>
-
 <!-- SLIDE 2: ARKA PLAN -->
-<div class="slide" id="s2">
+<div class="slide" id="s2" role="group" aria-label="Slayt 2: Arka Plan ve Rasyonel">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 02</div>
@@ -180,7 +206,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
       <div class="card">
         <div class="sec-head">✨ Formülasyon Bileşenleri</div>
         <div style="margin-bottom:14px;">
-          <div class="pill"><div class="d"></div>%25 Hidrolize Sığır Kolajeni (Tip 1 & 3)</div>
+          <div class="pill"><div class="d"></div>%25 Hidrolize Sığır Kolajeni (Tip 1 &amp; 3)</div>
           <div class="pill"><div class="d"></div>2 kDa Düşük Mol. Ağırlığı</div>
           <div class="pill"><div class="d"></div>%0,5 Hyaluronik Asit</div>
           <div class="pill"><div class="d"></div>Koenzim Q10</div>
@@ -193,7 +219,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
     <div class="card">
       <div class="sec-head">🔬 Biyoyararlanım Avantajı — 2 kDa Farkı</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-        <div style="background:rgba(212,168,67,.08);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">⚡</div><div style="font-size:.75rem;color:var(--gold-light);font-weight:700;margin-bottom:3px;">Hızlı Emilim</div><div style="font-size:.68rem;color:var(--muted);">2 kDa peptitler intestinal bariyeri >5 kDa'ya göre çok daha hızlı geçer</div></div>
+        <div style="background:rgba(212,168,67,.08);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">⚡</div><div style="font-size:.75rem;color:var(--gold-light);font-weight:700;margin-bottom:3px;">Hızlı Emilim</div><div style="font-size:.68rem;color:var(--muted);">2 kDa peptitler intestinal bariyeri &gt;5 kDa'ya göre çok daha hızlı geçer</div></div>
         <div style="background:rgba(36,121,199,.08);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">🎯</div><div style="font-size:.75rem;color:var(--sky);font-weight:700;margin-bottom:3px;">Hedef Doku Ulaşımı</div><div style="font-size:.68rem;color:var(--muted);">Daha yüksek serum peptit konsantrasyonu → fibroblast stimülasyonu</div></div>
         <div style="background:rgba(58,184,122,.07);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">🧪</div><div style="font-size:.75rem;color:var(--green);font-weight:700;margin-bottom:3px;">Antioksidan Sinerji</div><div style="font-size:.68rem;color:var(--muted);">CoQ10, Sea Buckthorn ve Aserola ile ROS nötralizasyonu</div></div>
         <div style="background:rgba(232,146,74,.07);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:5px;">💧</div><div style="font-size:.75rem;color:var(--amber);font-weight:700;margin-bottom:3px;">Hidrasyon Desteği</div><div style="font-size:.68rem;color:var(--muted);">%0,5 Hyaluronik asit ile NMF artışı ve bariyer güçlendirme</div></div>
@@ -203,9 +229,8 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Arka Plan</span><span>Slayt 02 / 08</span></div>
 </div>
-
 <!-- SLIDE 3: AMAÇLAR -->
-<div class="slide" id="s3">
+<div class="slide" id="s3" role="group" aria-label="Slayt 3: Çalışma Amaçları">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 03</div>
@@ -235,9 +260,8 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Amaçlar</span><span>Slayt 03 / 08</span></div>
 </div>
-
 <!-- SLIDE 4: ENDPOINTS -->
-<div class="slide" id="s4">
+<div class="slide" id="s4" role="group" aria-label="Slayt 4: Sonlanım Noktaları">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 04</div>
@@ -256,7 +280,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
       </div>
       <div class="ep-card sekonder" style="margin-bottom:0;">
         <h4>🔬 Sekonder — Histoloji (Biyopsi) + Yoğunluk</h4>
-        <p>3 mm punch biyopsi → IHK: <strong>Tip 1 & 3 prokolajen</strong> ve elastin. <strong>SkinScanner DUB®</strong> sonografi ile cilt yoğunluğu (Bolke 2019; uyluk). Kör patolog değerlendirmesi.</p>
+        <p>3 mm punch biyopsi → IHK: <strong>Tip 1 &amp; 3 prokolajen</strong> ve elastin. <strong>SkinScanner DUB®</strong> sonografi ile cilt yoğunluğu (Bolke 2019; uyluk). Kör patolog değerlendirmesi.</p>
         <div class="timepoints"><span class="tp">T0</span><span class="tp">T12</span></div>
       </div>
       <div class="ep-card sekonder" style="margin-bottom:0;">
@@ -265,7 +289,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
         <div class="timepoints"><span class="tp">T0</span><span class="tp">T12</span></div>
       </div>
       <div class="ep-card sekonder" style="margin-bottom:0;">
-        <h4>📋 Sekonder — Öznel Değerlendirme & Tolerabilite</h4>
+        <h4>📋 Sekonder — Öznel Değerlendirme &amp; Tolerabilite</h4>
         <p>Cilt kalitesi anketi (Laing 2020 modeli: kuruluk, pürüzlülük, elastikiyet, parlaklık, yumuşaklık; 5 puan Likert). GI tolerabilite ve uyum oranı. <strong>Uyum izlemi:</strong> 29., 57. ve 85. günlerde.</p>
         <div class="timepoints"><span class="tp">T4</span><span class="tp">T8</span><span class="tp">T12</span><span class="tp green">T16</span></div>
       </div>
@@ -273,9 +297,8 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Sonlanım Noktaları</span><span>Slayt 04 / 08</span></div>
 </div>
-
 <!-- SLIDE 5: STUDY DESIGN -->
-<div class="slide" id="s5">
+<div class="slide" id="s5" role="group" aria-label="Slayt 5: Çalışma Tasarımı">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 05</div>
@@ -297,7 +320,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
     <div class="tl-wrap">
       <div class="sec-head" style="margin-bottom:18px;">⏱️ Çalışma Zaman Çizelgesi</div>
       <div class="tl-track">
-        <div class="tl-node"><div class="tl-dot blue"></div><div class="tl-lbl">Tarama</div><div class="tl-val">-2. Hf</div><div class="tl-note">Uygunluk & IK</div></div>
+        <div class="tl-node"><div class="tl-dot blue"></div><div class="tl-lbl">Tarama</div><div class="tl-val">-2. Hf</div><div class="tl-note">Uygunluk &amp; IK</div></div>
         <div class="tl-node"><div class="tl-dot gold"></div><div class="tl-lbl">Başlangıç</div><div class="tl-val">T0</div><div class="tl-note">Randomizasyon</div></div>
         <div class="tl-node"><div class="tl-dot amber"></div><div class="tl-lbl">Erken Yanıt</div><div class="tl-val">T4</div><div class="tl-note">⚡ Klinik Yanıt + Uyum</div></div>
         <div class="tl-node"><div class="tl-dot blue"></div><div class="tl-lbl">Ara İzlem</div><div class="tl-val">T8</div><div class="tl-note">Güvenlik + Uyum</div></div>
@@ -305,7 +328,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
         <div class="tl-node"><div class="tl-dot frost"></div><div class="tl-lbl">Takip</div><div class="tl-val">T16</div><div class="tl-note">🔁 Sürdürülebilirlik</div></div>
       </div>
       <div class="arms-row">
-        <div class="arm-box test"><div class="arm-tag">Test Grubu</div><div class="arm-name">COllAGEN UP Gold</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>5g · 2 kDa sığır kolajeni (Tip 1&3)<br>+ CoQ10, Sea Buckthorn, Aserola, HA</div><span class="arm-n">n = 50</span></div>
+        <div class="arm-box test"><div class="arm-tag">Test Grubu</div><div class="arm-name">COllAGEN UP Gold</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>5g · 2 kDa sığır kolajeni (Tip 1&amp;3)<br>+ CoQ10, Sea Buckthorn, Aserola, HA</div><span class="arm-n">n = 50</span></div>
         <div class="arm-box ctrl"><div class="arm-tag">Aktif Kontrol</div><div class="arm-name">Standart Kolajen (10g)</div><div class="arm-dose">Günde 1 ampul (25 mL)<br>10g · 5 kDa hidrolize kolajen<br>Piyasa standart formülasyonu</div><span class="arm-n">n = 50</span></div>
         <div class="arm-box plc"><div class="arm-tag">Plasebo</div><div class="arm-name">Eşleştirilmiş Plasebo</div><div class="arm-dose">25 mL inaktif likit<br>K-sorbat, Na-benzoat, CMC,<br>sitrik asit, doğal aroma, su<br>Besin değeri yok (Laing modeli)</div><span class="arm-n">n = 50</span></div>
       </div>
@@ -313,16 +336,15 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Çalışma Tasarımı</span><span>Slayt 05 / 08</span></div>
 </div>
-
 <!-- SLIDE 6: POPULATION -->
-<div class="slide" id="s6">
+<div class="slide" id="s6" role="group" aria-label="Slayt 6: Araştırma Popülasyonu">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 06</div>
     <div class="slide-title">Araştırma Popülasyonu</div>
     <div class="slide-sub">Dahil etme ve dışlama kriterleri · N = 150 (Laing 2020 / Bolke 2019 uyumlu)</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
-      <span class="badge badge-design">35–65 yaş · Erkek & Kadın</span>
+      <span class="badge badge-design">35–65 yaş · Erkek &amp; Kadın</span>
       <span class="badge badge-n">Glogau Tip II–III Kırışıklık</span>
       <span class="badge badge-phase">Periorbital veya Nazolabial Kırışıklık</span>
     </div>
@@ -352,9 +374,8 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Popülasyon</span><span>Slayt 06 / 08</span></div>
 </div>
-
 <!-- SLIDE 7: STATS -->
-<div class="slide" id="s7">
+<div class="slide" id="s7" role="group" aria-label="Slayt 7: İstatistiksel Analiz">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 07</div>
@@ -382,7 +403,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
         <div class="si"><span class="k">Kayıp veri</span><span class="v">Multiple Imputation</span></div>
       </div>
       <div class="stat-card">
-        <h4>🔁 Tekrarlayan Ölçüm & Düzeltmeler</h4>
+        <h4>🔁 Tekrarlayan Ölçüm &amp; Düzeltmeler</h4>
         <div class="si"><span class="k">Model</span><span class="v">RM-ANOVA</span></div>
         <div class="si"><span class="k">Post-hoc</span><span class="v">Tukey HSD / Dunnett</span></div>
         <div class="si"><span class="k">Çoklu karşılaştırma</span><span class="v">Bonferroni</span></div>
@@ -390,7 +411,7 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
         <div class="si"><span class="k">Standart</span><span class="v">ICH E9</span></div>
       </div>
       <div class="stat-card">
-        <h4>🧪 Destekleyici & Sürdürülebilirlik</h4>
+        <h4>🧪 Destekleyici &amp; Sürdürülebilirlik</h4>
         <div class="si"><span class="k">Öznel değerlendirme</span><span class="v">Mann-Whitney-Wilcoxon</span></div>
         <div class="si"><span class="k">Biyopsi (Histoloji)</span><span class="v">Wilcoxon Signed-Rank</span></div>
         <div class="si"><span class="k">MDA (Oksidatif stres)</span><span class="v">Paired t-test</span></div>
@@ -402,9 +423,8 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – İstatistik</span><span>Slayt 07 / 08</span></div>
 </div>
-
 <!-- SLIDE 8: SAFETY -->
-<div class="slide" id="s8">
+<div class="slide" id="s8" role="group" aria-label="Slayt 8: Güvenlik ve Tolerabilite">
   <div class="bg-mesh"></div><div class="bg-lines"></div>
   <div class="slide-inner">
     <div class="slide-tag">Slayt 08</div>
@@ -425,14 +445,14 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
         <div class="si2"><div class="sd"></div><div>Lipid profili (sığır kolajeni kaynaklı): T0 ve T12</div></div>
       </div>
       <div class="safety-card">
-        <h4>📋 Uyum & Tolerabilite (Laing 2020)</h4>
+        <h4>📋 Uyum &amp; Tolerabilite (Laing 2020)</h4>
         <div class="si2"><div class="sd"></div><div><strong>Uyum kontrolleri:</strong> 29., 57. ve 85. günlerde</div></div>
         <div class="si2"><div class="sd"></div><div>GI anketi: Şişkinlik, gaz, bulantı, ishal/kabızlık (Likert)</div></div>
         <div class="si2"><div class="sd"></div><div>AE ve konkomitan tedavi değişiklikleri her uyum vizitesinde belgelenir</div></div>
         <div class="si2"><div class="sd"></div><div>Öznel ürün anketi T12 ve T16'da doldurulur (Laing modeli)</div></div>
       </div>
       <div class="safety-card">
-        <h4>⚠️ AE/SAE & Biyopsi Güvenliği</h4>
+        <h4>⚠️ AE/SAE &amp; Biyopsi Güvenliği</h4>
         <div class="si2"><div class="sd"></div><div>Tüm AE'ler CTCAE v5.0'a göre sınıflanır; SAE → 24 saat bildirim</div></div>
         <div class="si2"><div class="sd"></div><div>Bağımsız DSMB güvenlik verilerini kör olmadan inceler</div></div>
         <div class="si2"><div class="sd"></div><div>Biyopsi: lokal anestezi, ayrı onam, 2 hf yara takibi, kör patoloji</div></div>
@@ -446,15 +466,47 @@ html,body{width:100%;height:100%;background:var(--ink);overflow:hidden;font-fami
   </div>
   <div class="slide-footer"><span>COllAGEN UP Gold – Güvenlik</span><span>Slayt 08 / 08</span></div>
 </div>
-
 </div>
+<!-- DÜZELTME: </nav> kapanış etiketi eklendi (yukarıda <nav> olarak değiştirildi) -->
+</nav>
 <script>
-const slides=document.querySelectorAll('.slide');const total=slides.length;let cur=0;document.getElementById('tot').textContent=total;
-function go(n){slides[cur].classList.remove('active');slides[cur].classList.add('prev');setTimeout(()=>slides[cur].classList.remove('prev'),550);cur=(n+total)%total;slides[cur].classList.add('active');document.getElementById('cur').textContent=cur+1;document.getElementById('progress-bar').style.width=((cur+1)/total*100)+'%';}
-document.getElementById('btn-next').addEventListener('click',()=>go(cur+1));document.getElementById('btn-prev').addEventListener('click',()=>go(cur-1));
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(cur-1);});
-let tx=0;document.addEventListener('touchstart',e=>tx=e.changedTouches[0].clientX,{passive:true});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){dx<0?go(cur+1):go(cur-1);}},{passive:true});
-document.getElementById('progress-bar').style.width=(1/total*100)+'%';
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+let cur=0;
+document.getElementById('tot').textContent=total;
+
+// DÜZELTME: progress-bar aria-valuenow güncellemesi eklendi
+const progressBar=document.getElementById('progress-bar');
+
+function go(n){
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('prev');
+  // DÜZELTME: timeout süresi CSS transition süresiyle (500ms) eşleştirildi
+  setTimeout(()=>slides[cur].classList.remove('prev'),500);
+  cur=(n+total)%total;
+  slides[cur].classList.add('active');
+  document.getElementById('cur').textContent=cur+1;
+  progressBar.style.width=((cur+1)/total*100)+'%';
+  // DÜZELTME: aria-valuenow güncelleniyor
+  progressBar.setAttribute('aria-valuenow', cur+1);
+}
+
+document.getElementById('btn-next').addEventListener('click',()=>go(cur+1));
+document.getElementById('btn-prev').addEventListener('click',()=>go(cur-1));
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')   go(cur-1);
+});
+
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.changedTouches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50){dx<0?go(cur+1):go(cur-1);}
+},{passive:true});
+
+progressBar.style.width=(1/total*100)+'%';
 </script>
 </body>
 </html>
