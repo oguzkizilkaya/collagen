@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COllAGEN UP — Klinik Protokoller</title>
+<meta name="description" content="COllAGEN UP Faz III klinik çalışma protokolleri — cilt yaşlanması (Gold) ve saç sağlığı (Hair) araştırmaları.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -27,6 +30,7 @@ html,body{
 #nav{
   position:fixed;top:0;left:0;right:0;height:54px;
   background:rgba(10,22,40,.93);
+  -webkit-backdrop-filter:blur(14px);
   backdrop-filter:blur(14px);
   border-bottom:1px solid rgba(212,168,67,.15);
   display:flex;align-items:center;justify-content:space-between;
@@ -35,7 +39,8 @@ html,body{
 .nav-brand{
   font-family:var(--ff-head);font-size:1.1rem;letter-spacing:.06em;
   background:linear-gradient(90deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
 }
 .nav-tag{
   font-size:.72rem;color:var(--muted);
@@ -45,14 +50,14 @@ html,body{
 
 /* ── BACKGROUND ── */
 .bg-mesh{
-  position:fixed;inset:0;pointer-events:none;z-index:0;
+  position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(ellipse 80% 55% at 90% 15%, rgba(27,94,158,.16), transparent),
     radial-gradient(ellipse 55% 65% at 5%  85%, rgba(212,168,67,.07), transparent),
     radial-gradient(ellipse 40% 40% at 50% 50%, rgba(15,30,56,.4), transparent);
 }
 .bg-lines{
-  position:fixed;inset:0;pointer-events:none;z-index:0;
+  position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;
   background-image:
     linear-gradient(rgba(79,163,224,.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(79,163,224,.035) 1px, transparent 1px);
@@ -101,7 +106,8 @@ html,body{
 }
 .header-logo .up{
   background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
 }
 .header-desc{
   margin-top:18px;
@@ -187,11 +193,13 @@ html,body{
 }
 .gold .card-name .accent{
   background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
 }
 .hair .card-name .accent{
   background:linear-gradient(135deg,var(--sky),var(--frost));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
 }
 
 .card-desc{
@@ -233,11 +241,20 @@ html,body{
 .card-cta{
   display:flex;align-items:center;gap:6px;
   font-weight:700;font-size:.76rem;
-  transition:gap .2s;
 }
+.card-cta .arrow{
+  display:inline-block;
+  transition:transform .2s ease;
+}
+.protocol-card:hover .card-cta .arrow{transform:translateX(4px);}
 .gold .card-cta{color:var(--gold);}
 .hair .card-cta{color:var(--sky);}
-.protocol-card:hover .card-cta{gap:10px;}
+
+/* ── ACCESSIBILITY: REDUCED MOTION ── */
+@media(prefers-reduced-motion: reduce){
+  .header,.card-grid,.page-footer{animation:none;opacity:1;transform:none;}
+  .protocol-card,.card-cta .arrow{transition:none;}
+}
 
 /* ── FOOTER ── */
 .page-footer{
@@ -314,7 +331,7 @@ html,body{
         <div class="stat">
           <strong>3 Kol</strong> · Üçlü Kör · Randomize
         </div>
-        <span class="card-cta">Protokolü Aç →</span>
+        <span class="card-cta">Protokolü Aç <span class="arrow">→</span></span>
       </div>
     </a>
 
@@ -339,7 +356,7 @@ html,body{
         <div class="stat">
           <strong>3 Kol</strong> · Plasebo Kontrollü · Randomize
         </div>
-        <span class="card-cta">Protokolü Aç →</span>
+        <span class="card-cta">Protokolü Aç <span class="arrow">→</span></span>
       </div>
     </a>
 
